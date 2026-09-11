@@ -1,0 +1,2 @@
+import {readSession,isAdmin,json} from '../../_lib/auth.js';
+export async function onRequestGet({request,env}){const user=await readSession(request,env);if(!isAdmin(env,user))return json({error:'Staff access required.'},403);if(!env.DB)return json({error:'Database not configured'},503);const r=await env.DB.prepare('SELECT * FROM applications ORDER BY CASE status WHEN \'pending\' THEN 0 ELSE 1 END, created_at DESC LIMIT 250').all();return json({applications:r.results||[]})}

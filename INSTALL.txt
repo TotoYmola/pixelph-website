@@ -1,0 +1,8 @@
+1. Put pixelph_whitelist in your FiveM resources folder.
+2. In server.cfg add:
+   set pixelph_whitelist_api "https://pixelph.com/api/whitelist"
+   set pixelph_whitelist_key "PUT_THE_SAME_RANDOM_KEY_AS_CLOUDFLARE_FIVEM_API_KEY"
+   set pixelph_whitelist_fail_open 0
+   ensure pixelph_whitelist
+3. Keep Discord running for players so FiveM exposes their discord: identifier.
+4. Use a long random key and never post it publicly.
