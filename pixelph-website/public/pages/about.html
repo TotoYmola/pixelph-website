@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - PX Scripts Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="bg-gray-900">
+    <!-- Header with Navigation -->
+    <header class="fixed w-full bg-black/80 backdrop-blur-sm z-50 transition-transform duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="../index.html" class="flex items-center space-x-2">
+                    <img src="../logo (transparent).png" alt="PX Scripts Logo" class="h-12 animate__animated animate__fadeIn">
+                </a>
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-white focus:outline-none" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="../index.html" class="nav-link text-white">Home</a>
+                    <a href="about.html" class="nav-link text-white">About Us</a>
+                    <a href="rules.html" class="nav-link text-white">Rules</a>
+                    <a href="join.html" class="nav-link text-white">Join Us</a>
+                    <a href="membership.html" class="nav-link text-white">Membership</a>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Navigation -->
+        <div id="mobileMenu" class="md:hidden hidden bg-black/95">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="../index.html" class="nav-link text-white py-2">Home</a>
+                    <a href="about.html" class="nav-link text-white py-2">About Us</a>
+                    <a href="rules.html" class="nav-link text-white py-2">Rules</a>
+                    <a href="join.html" class="nav-link text-white py-2">Join Us</a>
+                    <a href="membership.html" class="nav-link text-white py-2">Membership</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Hero -->
+    <section class="pt-32 pb-20 bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 text-center hero-title">About This Template</h1>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gray-800 rounded-lg p-4 md:p-8 mb-8 section-content">
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-4">Purpose</h2>
+                    <p class="text-gray-300 mb-4">This is a free, open-source FiveM server website template maintained by PX Scripts. Clone it, customize it, and deploy to GitHub Pages.</p>
+                    <p class="text-gray-300">Swap colors, set your server ID via URL, and tailor content to your community without touching complex build tools.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-12">
+                    <div class="bg-gray-800 rounded-lg p-4 md:p-8 feature-card">
+                        <h2 class="text-xl md:text-2xl font-bold text-white mb-4">Mission</h2>
+                        <p class="text-gray-300">Make launching a stylish FiveM site fast, simple, and free.</p>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-4 md:p-8 feature-card">
+                        <h2 class="text-xl md:text-2xl font-bold text-white mb-4">Vision</h2>
+                        <p class="text-gray-300">A community of creators sharing and improving open templates.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg p-4 md:p-8 section-content">
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-6">Meet Our Team</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                        <!-- Server Owner Section -->
+                        <div class="text-center cursor-pointer feature-card" onclick="openModal('ownerModal')">
+                            <div class="w-20 h-20 md:w-24 md:h-24 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <span class="text-2xl md:text-3xl">👑</span>
+                            </div>
+                            <h3 class="text-lg md:text-xl font-bold text-white mb-2">Maintainers</h3>
+                            <p class="text-gray-400">Click to view team</p>
+                        </div>
+                        <!-- Admin Team Section -->
+                        <div class="text-center cursor-pointer feature-card" onclick="openModal('adminModal')">
+                            <div class="w-20 h-20 md:w-24 md:h-24 bg-blue-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <span class="text-2xl md:text-3xl">⚔️</span>
+                            </div>
+                            <h3 class="text-lg md:text-xl font-bold text-white mb-2">Contributors</h3>
+                            <p class="text-gray-400">Click to view team</p>
+                        </div>
+                        <!-- Development Team Section -->
+                        <div class="text-center cursor-pointer feature-card" onclick="openModal('devModal')">
+                            <div class="w-20 h-20 md:w-24 md:h-24 bg-blue-800 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <span class="text-2xl md:text-3xl">🛠️</span>
+                            </div>
+                            <h3 class="text-lg md:text-xl font-bold text-white mb-2">Development</h3>
+                            <p class="text-gray-400">Click to view team</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Templates -->
+    <!-- Owner Modal -->
+    <div id="ownerModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="min-h-screen px-4 text-center">
+            <div class="fixed inset-0 bg-black/50" onclick="closeModal('ownerModal')"></div>
+            <div class="inline-block align-middle bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-enter">
+                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-600 sm:mx-0 sm:h-10 sm:w-10">
+                            <span class="text-2xl">👑</span>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-xl md:text-2xl leading-6 font-bold text-white mb-4">Server Owner</h3>
+                            <div class="mt-2">
+                                <ul class="text-gray-300 space-y-2">
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Phoenix | Bummblebee
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm" onclick="closeModal('ownerModal')">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="min-h-screen px-4 text-center">
+            <div class="fixed inset-0 bg-black/50" onclick="closeModal('adminModal')"></div>
+            <div class="inline-block align-middle bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-enter">
+                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-700 sm:mx-0 sm:h-10 sm:w-10">
+                            <span class="text-2xl">⚔️</span>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-xl md:text-2xl leading-6 font-bold text-white mb-4">Admin Team</h3>
+                            <div class="mt-2">
+                                <ul class="text-gray-300 space-y-2">
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Name 1
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Name 2
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Name 3
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm" onclick="closeModal('adminModal')">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dev Modal -->
+    <div id="devModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="min-h-screen px-4 text-center">
+            <div class="fixed inset-0 bg-black/50" onclick="closeModal('devModal')"></div>
+            <div class="inline-block align-middle bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-enter">
+                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-800 sm:mx-0 sm:h-10 sm:w-10">
+                            <span class="text-2xl">🛠️</span>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-xl md:text-2xl leading-6 font-bold text-white mb-4">Development Team</h3>
+                            <div class="mt-2">
+                                <ul class="text-gray-300 space-y-2">
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Name 1
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Name 2
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-blue-500 mr-2">•</span>
+                                        Name 3
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm" onclick="closeModal('devModal')">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = modal.querySelector('.inline-block');
+            modal.classList.remove('hidden');
+            modalContent.classList.remove('modal-leave');
+            modalContent.classList.add('modal-enter');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const modalContent = modal.querySelector('.inline-block');
+            modalContent.classList.remove('modal-enter');
+            modalContent.classList.add('modal-leave');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('mobile-menu-enter');
+                mobileMenu.classList.remove('mobile-menu-leave');
+            } else {
+                mobileMenu.classList.add('mobile-menu-leave');
+                mobileMenu.classList.remove('mobile-menu-enter');
+            }
+        }
+
+        // Navbar hide/show on scroll
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll <= 0) {
+                header.classList.remove('transform', '-translate-y-full');
+                return;
+            }
+            
+            if (currentScroll > lastScroll && !header.classList.contains('transform')) {
+                // Scrolling down
+                header.classList.add('transform', '-translate-y-full');
+            } else if (currentScroll < lastScroll && header.classList.contains('transform')) {
+                // Scrolling up
+                header.classList.remove('transform', '-translate-y-full');
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html> 
