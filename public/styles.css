@@ -670,3 +670,9 @@ footer {
         background-attachment: scroll;
     }
 }
+
+/* PixelPH brand wordmarks */
+.pixelph-wordmark{font-weight:900;letter-spacing:.08em;font-size:1.35rem;color:#f4ffff;text-shadow:0 0 18px rgba(114,255,231,.28)}
+.pixelph-wordmark span,.pixelph-hero-mark span{color:#72ffe7}
+.pixelph-hero-mark{display:inline-flex;flex-direction:column;align-items:center;font-size:3.25rem;font-weight:950;letter-spacing:.08em;line-height:.9;color:#f6ffff;margin-bottom:2rem;text-shadow:0 0 28px rgba(114,255,231,.22)}
+.pixelph-hero-mark small{font-size:.72rem;letter-spacing:.48em;margin-top:.85rem;color:#9bb8b6;font-weight:700}

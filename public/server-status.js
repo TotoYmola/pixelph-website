@@ -1,6 +1,6 @@
 // Server status configuration
 const urlParams = new URLSearchParams(window.location.search);
-const SERVER_ID = urlParams.get('serverId') || 'y4lg95'; // Add Your server ID here Just Replace 'y4lg95' with your server ID (y4lg95 is a Fivem b299 server ID example)
+const SERVER_ID = urlParams.get('serverId') || 'yourserverid'; // Add Your server ID here Just Replace 'yourserverid' with your server ID (y4lg95 is a Fivem b299 server ID example)
 
 // Function to fetch server information
 async function fetchServerInfo() {
