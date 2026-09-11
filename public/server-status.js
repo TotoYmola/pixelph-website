@@ -1,6 +1,6 @@
 // Server status configuration
 const urlParams = new URLSearchParams(window.location.search);
-const SERVER_ID = urlParams.get('serverId') || 'yourserverid'; // Add Your server ID here Just Replace 'yourserverid' with your server ID (y4lg95 is a Fivem b299 server ID example)
+const SERVER_ID = urlParams.get('serverId') || 'zjja5ap'; // PixelPH Cfx.re join code
 
 // Function to fetch server information
 async function fetchServerInfo() {
@@ -122,7 +122,7 @@ function updateServerStatus(data) {
 // Update Connect link(s) based on SERVER_ID
 function updateConnectLink() {
     try {
-        const joinUrl = (SERVER_ID && SERVER_ID !== 'yourserverid') ? `https://cfx.re/join/${SERVER_ID}` : '#';
+        const joinUrl = `https://cfx.re/join/${SERVER_ID}`;
         const connectLink = document.getElementById('connectLink');
         if (connectLink) connectLink.setAttribute('href', joinUrl);
         document.querySelectorAll('[data-connect-link]')

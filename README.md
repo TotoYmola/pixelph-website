@@ -102,7 +102,7 @@ const SERVER_ID = 'your-server-id-here';
 
 #### **Server Information**
 - **Server IP**: Update connection links
-- **Discord**: Add your Discord server invite
+- **Discord**: https://discord.gg/te5mRyvFVc
 - **Social Media**: Update social media links
 - **Rules**: Customize server rules and guidelines
 
@@ -251,3 +251,9 @@ A modern FiveM website template built with **React.js** is in the works. Stay co
 - **Your feedback is welcome!**
 
 Follow this repository or join our Discord to stay updated.
+
+## PixelPH live connection
+- Website: https://pixelph.com
+- FiveM DNS: play.pixelph.com:30120
+- Cfx.re join code: zjja5ap
+- Live status uses the Cfx.re server API via `public/server-status.js`.
