@@ -105,3 +105,26 @@
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.city-countdown-v2:after,.countdown-glow,.countdown-particle{animation:none!important}
 }
+
+/* PixelPH Rules V5.7.1 — prevent text-caret / typing-like click behavior */
+.rules-page .page-shell,
+.rules-page .page-hero,
+.rules-page .page-section,
+.rules-page .content-card,
+.rules-page .notice,
+.rules-page .faq,
+.rules-page .faq details,
+.rules-page .faq summary,
+.rules-page .faq p {
+  -webkit-user-select: none;
+  user-select: none;
+  caret-color: transparent;
+}
+.rules-page .faq summary {
+  cursor: pointer;
+}
+.rules-page a,
+.rules-page button {
+  -webkit-user-select: none;
+  user-select: none;
+}
