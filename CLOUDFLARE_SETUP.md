@@ -1,52 +1,87 @@
-# PixelPH whitelist backend setup
+# PixelPH V4 production setup
 
-The website itself will still deploy as static pages immediately. The whitelist application/approval backend becomes live after these Cloudflare steps.
+The core whitelist website, D1, Discord OAuth, staff dashboard, and FiveM allow/deny bridge are already supported by this build.
 
-## 1) Create D1 database
-Create a D1 database named `pixelph-whitelist`, then run `schema.sql` against it.
-
-In the PixelPH Pages project, bind that database to the variable name:
+## Cloudflare D1 binding
+Bind the existing D1 database to Pages using exactly:
 
 `DB`
 
-## 2) Create a Discord OAuth application
-In Discord Developer Portal, create an application and add this redirect URL:
+Your current database name may be `pixelph_whitelist`; the binding name is what the Functions code uses.
+
+## Required environment variables
+- `DISCORD_CLIENT_ID` = Discord application Client ID
+- `DISCORD_CLIENT_SECRET` = Discord OAuth secret (Secret)
+- `SESSION_SECRET` = long random secret (Secret)
+- `ADMIN_DISCORD_IDS` = comma-separated numeric Discord user IDs for staff reviewers
+- `FIVEM_API_KEY` = long random secret shared only with the FiveM whitelist resource
+
+OAuth callback in Discord Developer Portal:
 
 `https://pixelph.com/api/auth/callback`
 
-Add these Cloudflare Pages environment variables/secrets:
+## Discord automation (new in V4)
+The same Discord application can also host the bot used for automatic whitelist role sync and DMs.
 
-- `DISCORD_CLIENT_ID` = Discord app client ID
-- `DISCORD_CLIENT_SECRET` = Discord app client secret
-- `SESSION_SECRET` = long random secret
-- `ADMIN_DISCORD_IDS` = comma-separated Discord user IDs allowed to review applications
-- `FIVEM_API_KEY` = long random key used only between FiveM and the website API
+Add these variables:
+- `DISCORD_BOT_TOKEN` = bot token (Secret)
+- `DISCORD_GUILD_ID` = your PixelPH Discord server ID
+- `DISCORD_WHITELIST_ROLE_ID` = the role ID that approved applicants should receive
 
-## 3) Deploy
-Push the whole project to the same GitHub `main` branch. Keep Pages output directory as `/public`.
+Bot permissions needed in the PixelPH Discord server:
+- View Channels
+- Send Messages
+- Manage Roles
 
-Cloudflare Pages automatically detects the root `/functions` directory for Pages Functions.
+Important: the bot's highest role must be ABOVE the Whitelisted role in Discord role hierarchy.
 
-## 4) Staff review page
-Staff page:
+Behavior:
+- Application submitted -> best-effort Discord DM confirming receipt
+- Approved -> adds Whitelisted role + sends approval DM
+- Rejected -> removes Whitelisted role (if present) + sends rejection reason by DM
+- If Discord role/DM sync fails, the whitelist database decision still saves and the staff dashboard shows a warning
 
-`https://pixelph.com/pages/admin.html`
+## Staff dashboard
+Recommended URL:
 
-Only Discord IDs listed in `ADMIN_DISCORD_IDS` can load applications or approve/reject them.
+`https://pixelph.com/admin`
 
-## 5) FiveM whitelist bridge
-Copy `server-integration/pixelph_whitelist` to your FiveM resources folder, then add to `server.cfg`:
+Staff access is enforced server-side using `ADMIN_DISCORD_IDS`.
+
+## My PixelPH
+Authenticated player status/history page:
+
+`https://pixelph.com/pages/account.html`
+
+## FiveM whitelist bridge
+Use the included `server-integration/pixelph_whitelist` resource and:
 
 ```cfg
 set pixelph_whitelist_api "https://pixelph.com/api/whitelist"
 set pixelph_whitelist_key "SAME_VALUE_AS_CLOUDFLARE_FIVEM_API_KEY"
 set pixelph_whitelist_fail_open 0
-# Optional while testing:
 # set pixelph_whitelist_debug 1
 ensure pixelph_whitelist
 ```
 
-`fail_open 0` means players are blocked if the whitelist API is down. This is safer for a whitelisted city.
+`fail_open 0` is recommended for production whitelisting.
 
-## Application integrity / AI answers
-The application records typing duration, input activity, and paste behavior as an **integrity score** for staff review. A high score is a warning, not an automatic rejection. Automated AI detectors can falsely flag human writing, so final rejection remains a staff decision.
+## Integrity screening V4
+This build does NOT claim to definitively detect AI-written text. Instead it records and scores review signals that are more defensible:
+- completion time
+- paste activity
+- typing/input activity
+- active field focus time
+- cross-application phrase similarity
+
+High-risk submissions are flagged for staff review. Staff remains the final decision maker.
+
+## Opening countdown
+City opening is configured for:
+
+`September 18, 2026 • 8:00 PM PHT (UTC+8)`
+
+Before that time, website connect buttons are visually locked. When the timer reaches zero, they unlock automatically and the hero changes to `PIXELPH CITY IS NOW LIVE`.
+
+## Production security
+The `FIVEM_API_KEY` used during chat/testing has been visible during setup. Before public launch, rotate it in BOTH Cloudflare and `server.cfg`, then restart `pixelph_whitelist`.
