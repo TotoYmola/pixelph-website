@@ -17,4 +17,11 @@ export async function sendDm(env,discordId,content){
   if(!dm.ok||!dm.body?.id)return dm;
   return req(env,`/channels/${dm.body.id}/messages`,{method:'POST',body:JSON.stringify({content:String(content).slice(0,1900)})});
 }
+
+export async function sendChannelMessage(env,channelId,content){
+  if(!configured(env)) return {ok:false,skipped:true,error:'Discord bot not configured'};
+  if(!channelId) return {ok:false,skipped:true,error:'Discord channel not configured'};
+  return req(env,`/channels/${encodeURIComponent(String(channelId))}/messages`,{method:'POST',body:JSON.stringify({content:String(content).slice(0,1900)})});
+}
+
 export function discordConfigured(env){return configured(env)&&env.DISCORD_GUILD_ID&&env.DISCORD_WHITELIST_ROLE_ID}

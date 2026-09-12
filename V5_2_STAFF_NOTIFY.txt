@@ -1,0 +1,3 @@
+PixelPH Website V5.2
+Adds Discord staff-channel notification for every new whitelist application.
+Channel ID: 1548176627446321172

@@ -1,5 +1,5 @@
 import {readSession,json} from '../../_lib/auth.js';
-import {sendDm} from '../../_lib/discord.js';
+import {sendDm,sendChannelMessage} from '../../_lib/discord.js';
 function text(v,min,max){v=String(v||'').trim();if(v.length<min||v.length>max)throw new Error(`Answer length must be ${min}-${max} characters.`);return v}
 function words(s){return String(s||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(x=>x.length>2)}
 function shingles(s,n=4){const w=words(s),out=new Set();for(let i=0;i<=w.length-n;i++)out.add(w.slice(i,i+n).join(' '));return out}
@@ -40,6 +40,18 @@ export async function onRequestPost({request,env}){
     await env.DB.prepare(`INSERT INTO applications (id,discord_id,discord_username,character_name,age,rp_experience,character_concept,scenario_conflict,scenario_meta,why_pixelph,status,integrity_score,integrity_json,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?, 'pending',?,?,?,?)`)
       .bind(id,user.id,user.username,clean.character_name,clean.age,clean.rp_experience,clean.character_concept,clean.scenario_conflict,clean.scenario_meta,clean.why_pixelph,risk.score,JSON.stringify(integrity),now,now).run();
     const dm=await sendDm(env,user.id,`📨 **PixelPH Whitelist Application Received**\nYour application for **${clean.character_name}** is now under staff review.\n\nCheck your status anytime: https://pixelph.com/pages/whitelist.html`);
-    return json({ok:true,id,status:'pending',notification:dm.ok?'sent':'skipped'},201)
+    // Best-effort staff notification. Submission still succeeds if Discord is temporarily unavailable.
+    const staffChannelId='1548176627446321172';
+    const riskLabel=risk.score>=70?'HIGH':risk.score>=40?'MEDIUM':'LOW';
+    const reasons=risk.reasons.length?risk.reasons.slice(0,4).map(x=>`• ${x}`).join('\n'):'• No notable integrity signals';
+    const staffMessage=`📋 **New PixelPH Whitelist Application**\n`+
+      `**Applicant:** ${user.username} (<@${user.id}>)\n`+
+      `**Character:** ${clean.character_name}\n`+
+      `**Integrity:** ${risk.score}/100 — ${riskLabel}\n`+
+      `**Signals:**\n${reasons}\n\n`+
+      `Review: https://pixelph.com/admin`;
+    const staffNotify=await sendChannelMessage(env,staffChannelId,staffMessage);
+
+    return json({ok:true,id,status:'pending',notification:dm.ok?'sent':'skipped',staff_notification:staffNotify.ok?'sent':'skipped'},201)
   }catch(e){return json({error:e.message||'Unable to submit'},400)}
 }

@@ -1,4 +1,4 @@
-# PixelPH Website V4 — Whitelist Operations Edition
+# PixelPH Website V5.2 — Whitelist Staff Notification
 
 This package builds on the working V3 whitelist pipeline and adds the production-facing operations layer.
 
@@ -20,3 +20,7 @@ Included:
 - PixelPH Discord and Cfx.re direct join integration
 
 See `CLOUDFLARE_SETUP.md` for the remaining Discord bot variables and production hardening.
+
+
+V5.2 addition:
+- New whitelist submissions post a best-effort notification to Discord channel `1548176627446321172` with applicant, character, integrity score/signals, and `/admin` review link.
