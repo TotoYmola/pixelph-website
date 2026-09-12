@@ -1,0 +1,7 @@
+PixelPH Website V5.2.1 — Staff Notification Diagnostic
+
+Adds an admin-only button on /admin:
+  Test Discord Staff Notification
+
+It sends a test message to channel 1548176627446321172 and shows the exact Discord HTTP result/error in the admin dashboard.
+No whitelist approval/revoke/FiveM logic was changed.

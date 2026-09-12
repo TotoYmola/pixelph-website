@@ -168,3 +168,27 @@ document.querySelectorAll('.admin-tab').forEach(btn=>btn.addEventListener('click
 search?.addEventListener('input',renderRows);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
 loadAdmin();
+
+// v5.2.1 Discord staff-channel diagnostic
+(() => {
+  const btn=document.getElementById('testStaffNotifyBtn');
+  if(!btn) return;
+  btn.addEventListener('click', async()=>{
+    const msg=document.getElementById('adminMessage');
+    const old=btn.textContent;
+    btn.disabled=true; btn.textContent='Testing Discord…';
+    try{
+      const r=await fetch('/api/admin/test-staff-notify',{method:'POST',cache:'no-store'});
+      const j=await r.json();
+      if(j.ok){
+        msg.className='notice success';
+        msg.textContent=`Discord staff notification SUCCESS (HTTP ${j.discord_status||200}) — check channel ${j.channel_id}.`;
+      }else{
+        msg.className='notice';
+        msg.textContent=`Discord staff notification FAILED (HTTP ${j.discord_status||r.status}) — ${j.discord_error||j.error||'Unknown error'}`;
+      }
+    }catch(e){
+      msg.className='notice'; msg.textContent=`Discord staff notification TEST ERROR — ${e.message}`;
+    }finally{btn.disabled=false;btn.textContent=old;}
+  });
+})();
