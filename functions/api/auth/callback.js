@@ -8,5 +8,5 @@ export async function onRequestGet({request,env}){
   if(!tokenRes.ok)return new Response('Discord login failed.',{status:502});
   const token=await tokenRes.json(); const meRes=await fetch('https://discord.com/api/users/@me',{headers:{authorization:`Bearer ${token.access_token}`}}); if(!meRes.ok)return new Response('Discord profile lookup failed.',{status:502});
   const me=await meRes.json(); const session=await makeSession(env,me);
-  return new Response(null,{status:302,headers:{location:intent==='admin'?'/pages/admin.html':'/pages/whitelist.html','set-cookie':sessionCookie(session)}})
+  return new Response(null,{status:302,headers:{location:intent==='admin'?'/admin':'/pages/whitelist.html','set-cookie':sessionCookie(session)}})
 }

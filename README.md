@@ -19,3 +19,6 @@ See `CLOUDFLARE_SETUP.md` for the one-time backend setup.
 
 ## V3 display repair
 This build uses a new stylesheet filename (`pixelph-v3-fixed.css`) and restores the `v2-body` compatibility class to prevent the new HTML from being paired with an older cached V2 stylesheet. This fixes the exposed mobile menu, cramped desktop navigation, dark/invisible heading text, and broken hero layout seen after the prior deployment.
+
+## Admin redirect-loop fix
+This build removes the `/admin -> /admin.html` redirect that can loop with Cloudflare Pages' canonical HTML routing. Use `/admin` (recommended) or `/admin.html`; both resolve to the staff dashboard. Staff OAuth now uses `?admin=1` and returns to `/admin`.

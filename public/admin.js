@@ -36,7 +36,7 @@ async function loadAdmin(){
     updateStats();renderRows();
   }catch(e){
     msg.className='notice danger admin-access-error';
-    msg.innerHTML=`<strong>Staff dashboard unavailable.</strong><br>${esc(e.message)}<div class="hero-actions" style="margin-top:14px"><a class="primary-btn" href="/api/auth/login?next=/admin.html">Staff Discord Login</a><a class="ghost-btn" href="/">Back to Website</a></div>`;
+    msg.innerHTML=`<strong>Staff dashboard unavailable.</strong><br>${esc(e.message)}<div class="hero-actions" style="margin-top:14px"><a class="primary-btn" href="/api/auth/login?admin=1">Staff Discord Login</a><a class="ghost-btn" href="/">Back to Website</a></div>`;
   }
 }
 
