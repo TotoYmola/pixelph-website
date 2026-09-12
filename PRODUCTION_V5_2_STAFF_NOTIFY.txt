@@ -1,0 +1,6 @@
+PixelPH Website V5.2 Production
+
+- Automatic Discord staff notification on new whitelist applications.
+- Staff channel: 1548176627446321172
+- Diagnostic/test button and diagnostic-only admin API code removed.
+- Existing whitelist lifecycle retained: approve, reject, revoke, restore, delete/reset, Discord role/DM sync, D1, and FiveM whitelist API.

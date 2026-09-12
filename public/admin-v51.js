@@ -168,28 +168,3 @@ document.querySelectorAll('.admin-tab').forEach(btn=>btn.addEventListener('click
 search?.addEventListener('input',renderRows);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
 loadAdmin();
-
-// v5.2.1 Discord staff-channel diagnostic
-(() => {
-  const btn=document.getElementById('testStaffNotifyBtn');
-  if(!btn) return;
-  btn.addEventListener('click', async()=>{
-    const msg=document.getElementById('adminMessage');
-    const old=btn.textContent;
-    btn.disabled=true; btn.textContent='Testing Discord…';
-    try{
-      const r=await fetch('/api/admin/applications',{method:'POST',cache:'no-store',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({action:'test_staff_notify'})});
-      const j=await r.json();
-      if(j.ok){
-        msg.className='notice success';
-        msg.textContent=`Discord staff notification SUCCESS (HTTP ${j.discord_status||200}) — ${j.channel_name?`#${j.channel_name} • `:''}channel ${j.channel_id}.`;
-      }else{
-        msg.className='notice';
-        const detail=j.discord_error||j.error||j.discord_raw||(j.discord_body?JSON.stringify(j.discord_body):'Unknown error');
-        msg.textContent=`Discord staff notification FAILED [${j.phase||'unknown'}] (HTTP ${j.discord_status??r.status}) — ${detail}`;
-      }
-    }catch(e){
-      msg.className='notice'; msg.textContent=`Discord staff notification TEST ERROR — ${e.message}`;
-    }finally{btn.disabled=false;btn.textContent=old;}
-  });
-})();
