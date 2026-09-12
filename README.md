@@ -24,3 +24,5 @@ See `CLOUDFLARE_SETUP.md` for the remaining Discord bot variables and production
 
 V5.2 addition:
 - New whitelist submissions post a best-effort notification to Discord channel `1548176627446321172` with applicant, character, integrity score/signals, and `/admin` review link.
+
+V5.13: Final landing-page polish — scroll-state nav, subtle progress indicator, hero/title motion, refined hover depth, staggered reveals, mobile/reduced-motion safeguards. No backend or rules logic changed.
