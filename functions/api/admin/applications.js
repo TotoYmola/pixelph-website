@@ -1,5 +1,5 @@
 import {readSession,isAdmin,json} from '../../_lib/auth.js';
-import {sendChannelMessage} from '../../_lib/discord.js';
+import {getChannel,sendChannelMessage} from '../../_lib/discord.js';
 
 const STAFF_CHANNEL_ID='1548176627446321172';
 
@@ -24,6 +24,35 @@ export async function onRequestPost({request,env}){
   try{body=await request.json()}catch{}
   if(body.action!=='test_staff_notify')return json({error:'Unknown admin action.'},400);
 
+  const channel=await getChannel(env,STAFF_CHANNEL_ID);
+  if(!channel.ok){
+    return json({
+      ok:false,
+      phase:'channel_lookup',
+      channel_id:STAFF_CHANNEL_ID,
+      discord_status:channel.status??null,
+      discord_error:channel.error||'Channel lookup failed',
+      discord_body:channel.body??null,
+      discord_raw:channel.raw??null
+    },502);
+  }
+
+  const channelType=channel.body?.type;
+  const channelName=channel.body?.name||null;
+  // Discord text-capable common types: 0 guild text, 5 announcement, 10/11/12 threads.
+  // Forum/media channels (15/16) require creating a thread/post rather than a plain message.
+  if(channelType===15||channelType===16){
+    return json({
+      ok:false,
+      phase:'channel_type',
+      channel_id:STAFF_CHANNEL_ID,
+      channel_name:channelName,
+      channel_type:channelType,
+      discord_status:400,
+      discord_error:channelType===15?'Selected channel is a Forum channel. Use a normal Text channel for staff notifications.':'Selected channel is a Media channel. Use a normal Text channel for staff notifications.'
+    },502);
+  }
+
   const result=await sendChannelMessage(
     env,
     STAFF_CHANNEL_ID,
@@ -32,10 +61,14 @@ export async function onRequestPost({request,env}){
 
   return json({
     ok:Boolean(result.ok),
+    phase:'message_send',
     channel_id:STAFF_CHANNEL_ID,
-    discord_status:result.status||null,
+    channel_name:channelName,
+    channel_type:channelType,
+    discord_status:result.status??null,
     discord_error:result.error||null,
-    discord_body:result.body||null,
+    discord_body:result.body??null,
+    discord_raw:result.raw??null,
     skipped:Boolean(result.skipped)
   },result.ok?200:502);
 }

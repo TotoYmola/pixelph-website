@@ -182,10 +182,11 @@ loadAdmin();
       const j=await r.json();
       if(j.ok){
         msg.className='notice success';
-        msg.textContent=`Discord staff notification SUCCESS (HTTP ${j.discord_status||200}) — check channel ${j.channel_id}.`;
+        msg.textContent=`Discord staff notification SUCCESS (HTTP ${j.discord_status||200}) — ${j.channel_name?`#${j.channel_name} • `:''}channel ${j.channel_id}.`;
       }else{
         msg.className='notice';
-        msg.textContent=`Discord staff notification FAILED (HTTP ${j.discord_status||r.status}) — ${j.discord_error||j.error||'Unknown error'}`;
+        const detail=j.discord_error||j.error||j.discord_raw||(j.discord_body?JSON.stringify(j.discord_body):'Unknown error');
+        msg.textContent=`Discord staff notification FAILED [${j.phase||'unknown'}] (HTTP ${j.discord_status??r.status}) — ${detail}`;
       }
     }catch(e){
       msg.className='notice'; msg.textContent=`Discord staff notification TEST ERROR — ${e.message}`;
