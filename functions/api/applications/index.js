@@ -23,6 +23,7 @@ export async function onRequestPost({request,env}){
   let b;try{b=await request.json()}catch{return json({error:'Invalid request'},400)}
   const latest=await env.DB.prepare('SELECT status,updated_at,created_at FROM applications WHERE discord_id=? ORDER BY created_at DESC LIMIT 1').bind(user.id).first();
   if(latest?.status==='pending'||latest?.status==='approved')return json({error:'You already have an active application.'},409);
+  if(latest?.status==='revoked')return json({error:'Your PixelPH whitelist was revoked. Contact staff if you believe this is an error.'},403);
   if(latest?.status==='rejected'&&Date.now()-new Date(latest.updated_at||latest.created_at).getTime()<7*86400000)return json({error:'You can reapply 7 days after a rejection.'},429);
   try{
     const clean={
