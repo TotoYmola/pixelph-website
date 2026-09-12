@@ -34,7 +34,7 @@ export async function onRequestPost({request,env}){
       discord_error:channel.error||'Channel lookup failed',
       discord_body:channel.body??null,
       discord_raw:channel.raw??null
-    },502);
+    },200);
   }
 
   const channelType=channel.body?.type;
@@ -50,7 +50,7 @@ export async function onRequestPost({request,env}){
       channel_type:channelType,
       discord_status:400,
       discord_error:channelType===15?'Selected channel is a Forum channel. Use a normal Text channel for staff notifications.':'Selected channel is a Media channel. Use a normal Text channel for staff notifications.'
-    },502);
+    },200);
   }
 
   const result=await sendChannelMessage(
@@ -70,5 +70,5 @@ export async function onRequestPost({request,env}){
     discord_body:result.body??null,
     discord_raw:result.raw??null,
     skipped:Boolean(result.skipped)
-  },result.ok?200:502);
+  },200);
 }

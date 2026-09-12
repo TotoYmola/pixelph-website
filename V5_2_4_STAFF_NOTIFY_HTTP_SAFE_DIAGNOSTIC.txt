@@ -1,0 +1,1 @@
+V5.2.4: diagnostic failures return HTTP 200 so Cloudflare does not replace the JSON body with its generic 502 response.
