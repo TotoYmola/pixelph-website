@@ -16,6 +16,19 @@ function integrityBadge(score){const n=Number(score||0);const cls=n>=60?'high':n
 function integrityDetails(a){
   let data=null;try{data=a.integrity_json?JSON.parse(a.integrity_json):null}catch{}
   if(!data)return '<p class="review-muted">No additional integrity signal details were stored.</p>';
+  if(data.method==='behavior-and-similarity-heuristic'){
+    const sum=data.summary||{}, reasons=Array.isArray(data.reasons)?data.reasons:[];
+    return `<div class="integrity-v2">
+      <div class="integrity-mini-grid">
+        <div><span>Paste events</span><strong>${esc(sum.pasteCount??0)}</strong></div>
+        <div><span>Typing events</span><strong>${esc(sum.inputEvents??0)}</strong></div>
+        <div><span>Active time</span><strong>${Math.round(Number(sum.totalMs||0)/1000)}s</strong></div>
+        <div><span>Copy similarity</span><strong>${esc(data.copySimilarity??0)}%</strong></div>
+      </div>
+      ${reasons.length?`<div class="signal-reasons"><b>Review signals</b>${reasons.map(r=>`<span>${esc(r)}</span>`).join('')}</div>`:'<p class="review-muted">No strong integrity signals detected.</p>'}
+      <p class="review-muted">This is a behavior/copy-similarity heuristic, not a definitive AI detector. Staff makes the final decision.</p>
+    </div>`;
+  }
   const entries=Array.isArray(data)?data:Object.entries(data).map(([key,value])=>({key,value}));
   if(!entries.length)return '<p class="review-muted">No additional integrity signal details were stored.</p>';
   return `<div class="integrity-list">${entries.map(x=>{
@@ -93,6 +106,7 @@ function openApp(id){
     ${answerBlock('Metagaming Scenario',a.scenario_meta)}
     ${answerBlock('Why PixelPH',a.why_pixelph)}
     ${a.reviewed_at?`<div class="previous-review"><b>Previous review</b><p>${statusBadge(a.status)} by ${esc(a.reviewed_by||'staff')} on ${fmtDate(a.reviewed_at)}</p>${a.review_reason?`<p>${esc(a.review_reason)}</p>`:''}</div>`:''}
+    <div class="quick-reasons"><span>Quick reject reason</span><div><button type="button" data-reason="Low-effort application. Please provide more detailed, original answers.">Low effort</button><button type="button" data-reason="Your answers contain signs of copied or heavily pasted content. Please reapply using your own words.">Copied / pasted</button><button type="button" data-reason="Your scenario answers do not demonstrate sufficient understanding of PixelPH roleplay rules.">RP knowledge</button><button type="button" data-reason="Your metagaming answer does not meet PixelPH whitelist standards.">Metagaming</button></div></div>
     <div class="field review-note"><label for="reviewReason">Staff note / rejection reason</label><textarea id="reviewReason" placeholder="Required when rejecting. Optional staff note when approving.">${esc(a.review_reason||'')}</textarea></div>
     <div class="admin-actions review-actions">
       <button class="primary-btn" data-decision="approved" data-id="${esc(a.id)}"><i class="fa-solid fa-check"></i> Approve</button>
@@ -101,6 +115,7 @@ function openApp(id){
   panel.classList.remove('hidden');backdrop.classList.remove('hidden');document.body.classList.add('review-open');
   panel.querySelector('.drawer-close').addEventListener('click',closePanel);backdrop.addEventListener('click',closePanel,{once:true});
   panel.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>decide(b.dataset.id,b.dataset.decision,b)));
+  panel.querySelectorAll('[data-reason]').forEach(b=>b.addEventListener('click',()=>{const t=$('reviewReason');if(t)t.value=b.dataset.reason||''}));
 }
 function closePanel(){panel.classList.add('hidden');backdrop.classList.add('hidden');document.body.classList.remove('review-open')}
 
@@ -113,8 +128,19 @@ async function decide(id,status,button){
     const j=await r.json();if(!r.ok)throw new Error(j.error||'Update failed');
     const a=apps.find(x=>String(x.id)===String(id));if(a){a.status=status;a.review_reason=reason;a.reviewed_at=new Date().toISOString()}
     closePanel();updateStats();renderRows();
-    msg.className='notice admin-flash';msg.textContent=status==='approved'?'Application approved.':'Application rejected.';msg.classList.remove('hidden');
-    setTimeout(()=>msg.classList.add('hidden'),3000);
+    const role=j.discord?.role||{};
+    const dm=j.discord?.dm||{};
+    const roleText=role.ok?'SUCCESS':(role.skipped?'SKIPPED':'FAILED');
+    const dmText=dm.ok?'SUCCESS':(dm.skipped?'SKIPPED':'FAILED');
+    const details=[
+      `Application: ${status.toUpperCase()}`,
+      `Discord role: ${roleText}${role.status?` (HTTP ${role.status})`:''}${role.error?` — ${role.error}`:''}`,
+      `Discord DM: ${dmText}${dm.status?` (HTTP ${dm.status})`:''}${dm.error?` — ${dm.error}`:''}`
+    ].join('\n');
+    msg.className='notice admin-flash';
+    msg.textContent=details.replace(/\n/g,' | ');
+    msg.classList.remove('hidden');
+    alert(details);
   }catch(e){alert(e.message)}finally{button.disabled=false;button.innerHTML=label}
 }
 
