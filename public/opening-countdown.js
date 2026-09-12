@@ -29,14 +29,16 @@
   function tick(){
     const remaining=target-Date.now();
     if(remaining<=0){
-      if(root) root.hidden=true;
-      if(live) live.hidden=false;
+      if(root){ root.hidden=true; root.style.display='none'; }
+      if(live){ live.hidden=false; live.style.display='flex'; }
       unlock();
       clearInterval(timer);
       return;
     }
 
     lock();
+    if(live){ live.hidden=true; live.style.display='none'; }
+    if(root){ root.hidden=false; root.style.display='block'; }
     if(!root) return;
 
     const seconds=Math.floor(remaining/1000);
