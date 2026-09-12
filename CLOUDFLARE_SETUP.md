@@ -41,6 +41,8 @@ Copy `server-integration/pixelph_whitelist` to your FiveM resources folder, then
 set pixelph_whitelist_api "https://pixelph.com/api/whitelist"
 set pixelph_whitelist_key "SAME_VALUE_AS_CLOUDFLARE_FIVEM_API_KEY"
 set pixelph_whitelist_fail_open 0
+# Optional while testing:
+# set pixelph_whitelist_debug 1
 ensure pixelph_whitelist
 ```
 
