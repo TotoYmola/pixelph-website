@@ -1,6 +1,124 @@
-const msg=document.getElementById('adminMessage'),list=document.getElementById('adminList'),rows=document.getElementById('adminRows'),panel=document.getElementById('reviewPanel');let apps=[];
-async function loadAdmin(){try{const r=await fetch('/api/admin/applications');const j=await r.json();if(!r.ok)throw new Error(j.error||'Access denied');apps=j.applications||[];msg.textContent=`${apps.length} application(s) loaded.`;list.classList.remove('hidden');rows.innerHTML=apps.map(a=>`<tr><td>${esc(a.discord_username||a.discord_id)}</td><td>${esc(a.character_name)}</td><td>${esc(a.status)}</td><td>${a.integrity_score>=60?'⚠️ '+a.integrity_score:a.integrity_score}</td><td>${new Date(a.created_at).toLocaleString()}</td><td><button class="ghost-btn" onclick="openApp('${a.id}')">Review</button></td></tr>`).join('')}catch(e){msg.className='notice danger';msg.textContent=e.message}}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function openApp(id){const a=apps.find(x=>x.id===id);if(!a)return;panel.classList.remove('hidden');panel.innerHTML=`<h2>${esc(a.character_name)}</h2><p><b>Discord:</b> ${esc(a.discord_username)} (${esc(a.discord_id)})</p><p><b>Integrity score:</b> ${a.integrity_score}/100 ${a.integrity_score>=60?'— review carefully':''}</p><hr style="border:0;border-top:1px solid var(--line)"><h3>RP Experience</h3><p>${esc(a.rp_experience)}</p><h3>Character Concept</h3><p>${esc(a.character_concept)}</p><h3>Conflict Scenario</h3><p>${esc(a.scenario_conflict)}</p><h3>Metagaming Scenario</h3><p>${esc(a.scenario_meta)}</p><h3>Why PixelPH</h3><p>${esc(a.why_pixelph)}</p><div class="field"><label>Review reason / note</label><textarea id="reviewReason" placeholder="Required for rejection; optional for approval"></textarea></div><div class="admin-actions"><button class="primary-btn" onclick="decide('${id}','approved')">Approve</button><button class="danger-btn" onclick="decide('${id}','rejected')">Reject</button></div>`;panel.scrollIntoView({behavior:'smooth'})}
-async function decide(id,status){const reason=document.getElementById('reviewReason')?.value||'';if(status==='rejected'&&!reason.trim())return alert('Add a rejection reason.');const r=await fetch(`/api/admin/applications/${id}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({status,reason})});const j=await r.json();if(!r.ok)return alert(j.error||'Update failed');panel.classList.add('hidden');loadAdmin()}
+const $ = (id) => document.getElementById(id);
+const msg = $('adminMessage');
+const dash = $('adminDashboard');
+const rows = $('adminRows');
+const empty = $('adminEmpty');
+const panel = $('reviewPanel');
+const backdrop = $('reviewBackdrop');
+const search = $('adminSearch');
+let apps = [];
+let currentFilter = 'pending';
+
+function esc(s){return String(s ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function fmtDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?esc(v):d.toLocaleString()}
+function statusBadge(s){const value=String(s||'pending').toLowerCase();return `<span class="admin-status ${esc(value)}">${esc(value)}</span>`}
+function integrityBadge(score){const n=Number(score||0);const cls=n>=60?'high':n>=30?'medium':'low';return `<span class="integrity-badge ${cls}">${n>=60?'⚠ ':''}${n}/100</span>`}
+function integrityDetails(a){
+  let data=null;try{data=a.integrity_json?JSON.parse(a.integrity_json):null}catch{}
+  if(!data)return '<p class="review-muted">No additional integrity signal details were stored.</p>';
+  const entries=Array.isArray(data)?data:Object.entries(data).map(([key,value])=>({key,value}));
+  if(!entries.length)return '<p class="review-muted">No additional integrity signal details were stored.</p>';
+  return `<div class="integrity-list">${entries.map(x=>{
+    if(Array.isArray(data)) return `<div>${esc(typeof x==='string'?x:JSON.stringify(x))}</div>`;
+    const val=typeof x.value==='object'?JSON.stringify(x.value):String(x.value);
+    return `<div><b>${esc(x.key)}</b><span>${esc(val)}</span></div>`;
+  }).join('')}</div>`;
+}
+
+async function loadAdmin(){
+  msg.className='notice';msg.textContent='Checking staff access…';
+  try{
+    const r=await fetch('/api/admin/applications',{headers:{accept:'application/json'},cache:'no-store'});
+    let j={};try{j=await r.json()}catch{}
+    if(!r.ok) throw new Error(j.error || (r.status===403?'Staff access required. Make sure this Discord account is listed in ADMIN_DISCORD_IDS.':'Unable to load applications.'));
+    apps=j.applications||[];
+    msg.classList.add('hidden');dash.classList.remove('hidden');
+    updateStats();renderRows();
+  }catch(e){
+    msg.className='notice danger admin-access-error';
+    msg.innerHTML=`<strong>Staff dashboard unavailable.</strong><br>${esc(e.message)}<div class="hero-actions" style="margin-top:14px"><a class="primary-btn" href="/api/auth/login?next=/admin.html">Staff Discord Login</a><a class="ghost-btn" href="/">Back to Website</a></div>`;
+  }
+}
+
+function updateStats(){
+  $('statPending').textContent=apps.filter(a=>a.status==='pending').length;
+  $('statApproved').textContent=apps.filter(a=>a.status==='approved').length;
+  $('statRejected').textContent=apps.filter(a=>a.status==='rejected').length;
+  $('statFlagged').textContent=apps.filter(a=>Number(a.integrity_score)>=60).length;
+}
+
+function filteredApps(){
+  const q=(search?.value||'').trim().toLowerCase();
+  return apps.filter(a=>{
+    const statusOK=currentFilter==='all'||(currentFilter==='flagged'?Number(a.integrity_score)>=60:a.status===currentFilter);
+    if(!statusOK)return false;
+    if(!q)return true;
+    return [a.discord_username,a.discord_id,a.character_name].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+}
+
+function renderRows(){
+  const list=filteredApps();
+  empty.classList.toggle('hidden',list.length!==0);
+  $('adminList').classList.toggle('hidden',list.length===0);
+  rows.innerHTML=list.map(a=>`<tr>
+    <td><div class="applicant-cell"><strong>${esc(a.discord_username||'Unknown')}</strong><small>${esc(a.discord_id)}</small></div></td>
+    <td>${esc(a.character_name)}</td>
+    <td>${statusBadge(a.status)}</td>
+    <td>${integrityBadge(a.integrity_score)}</td>
+    <td>${fmtDate(a.created_at)}</td>
+    <td><button class="ghost-btn admin-review-btn" data-review="${esc(a.id)}">Review</button></td>
+  </tr>`).join('');
+  document.querySelectorAll('[data-review]').forEach(b=>b.addEventListener('click',()=>openApp(b.dataset.review)));
+}
+
+function answerBlock(title,text){return `<section class="answer-block"><h3>${esc(title)}</h3><p>${esc(text||'—')}</p></section>`}
+function openApp(id){
+  const a=apps.find(x=>String(x.id)===String(id));if(!a)return;
+  panel.innerHTML=`
+    <div class="review-head">
+      <div><div class="section-kicker">APPLICATION REVIEW</div><h2>${esc(a.character_name)}</h2><p>${esc(a.discord_username)} • ${esc(a.discord_id)}</p></div>
+      <button class="drawer-close" type="button" aria-label="Close review">×</button>
+    </div>
+    <div class="review-meta">
+      <div><span>Status</span>${statusBadge(a.status)}</div>
+      <div><span>Age</span><strong>${esc(a.age)}</strong></div>
+      <div><span>Integrity</span>${integrityBadge(a.integrity_score)}</div>
+      <div><span>Submitted</span><strong>${fmtDate(a.created_at)}</strong></div>
+    </div>
+    <div class="integrity-card"><div class="review-label">Integrity signals</div>${integrityDetails(a)}</div>
+    ${answerBlock('Roleplay Experience',a.rp_experience)}
+    ${answerBlock('Character Concept',a.character_concept)}
+    ${answerBlock('Conflict Scenario',a.scenario_conflict)}
+    ${answerBlock('Metagaming Scenario',a.scenario_meta)}
+    ${answerBlock('Why PixelPH',a.why_pixelph)}
+    ${a.reviewed_at?`<div class="previous-review"><b>Previous review</b><p>${statusBadge(a.status)} by ${esc(a.reviewed_by||'staff')} on ${fmtDate(a.reviewed_at)}</p>${a.review_reason?`<p>${esc(a.review_reason)}</p>`:''}</div>`:''}
+    <div class="field review-note"><label for="reviewReason">Staff note / rejection reason</label><textarea id="reviewReason" placeholder="Required when rejecting. Optional staff note when approving.">${esc(a.review_reason||'')}</textarea></div>
+    <div class="admin-actions review-actions">
+      <button class="primary-btn" data-decision="approved" data-id="${esc(a.id)}"><i class="fa-solid fa-check"></i> Approve</button>
+      <button class="danger-btn" data-decision="rejected" data-id="${esc(a.id)}"><i class="fa-solid fa-xmark"></i> Reject</button>
+    </div>`;
+  panel.classList.remove('hidden');backdrop.classList.remove('hidden');document.body.classList.add('review-open');
+  panel.querySelector('.drawer-close').addEventListener('click',closePanel);backdrop.addEventListener('click',closePanel,{once:true});
+  panel.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>decide(b.dataset.id,b.dataset.decision,b)));
+}
+function closePanel(){panel.classList.add('hidden');backdrop.classList.add('hidden');document.body.classList.remove('review-open')}
+
+async function decide(id,status,button){
+  const reason=$('reviewReason')?.value||'';
+  if(status==='rejected'&&!reason.trim())return alert('Add a rejection reason before rejecting this application.');
+  const label=button.innerHTML;button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+  try{
+    const r=await fetch(`/api/admin/applications/${encodeURIComponent(id)}`,{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({status,reason})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error||'Update failed');
+    const a=apps.find(x=>String(x.id)===String(id));if(a){a.status=status;a.review_reason=reason;a.reviewed_at=new Date().toISOString()}
+    closePanel();updateStats();renderRows();
+    msg.className='notice admin-flash';msg.textContent=status==='approved'?'Application approved.':'Application rejected.';msg.classList.remove('hidden');
+    setTimeout(()=>msg.classList.add('hidden'),3000);
+  }catch(e){alert(e.message)}finally{button.disabled=false;button.innerHTML=label}
+}
+
+document.querySelectorAll('.admin-tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.admin-tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;renderRows()}));
+search?.addEventListener('input',renderRows);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
 loadAdmin();
