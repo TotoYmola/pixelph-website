@@ -1,0 +1,14 @@
+PixelPH Website V5.3.1 - Membership / Showroom Split
+
+Membership now contains only:
+- City Priority
+- Prime Access
+
+Moved to separate Showroom page:
+- Business Commission (formerly Business Patron)
+- Signature Look (Exclusive Hair)
+- Signature Vehicle (Lore-Friendly)
+- Signature Ped
+
+Showroom is display/inquiry only. All transactions are handled through Discord.
+No D1 migration required for this UI split.
