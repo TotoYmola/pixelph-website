@@ -1,0 +1,16 @@
+PixelPH Whitelist V5.1 CLEAN ADMIN BUILD
+
+Key fix:
+- ONE authoritative dashboard: public/admin.html
+- Unique script: public/admin-v51.js
+- public/pages/admin.html only redirects to /admin
+- Explicit no-cache headers for admin HTML + JS
+- Visible marker on /admin: "Dashboard v5.1 • Revoke/Reset enabled"
+
+Expected approved application actions:
+- Revoke Whitelist
+- Delete / Reset Application
+
+Expected revoked application actions:
+- Restore Whitelist
+- Delete / Reset Application

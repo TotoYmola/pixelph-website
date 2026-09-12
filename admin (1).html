@@ -2,78 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Whitelist Staff Dashboard | PixelPH</title>
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <link rel="icon" href="/favicon.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="/pixelph-v3-fixed.css?v=20260912-0205">
+  <meta http-equiv="refresh" content="0; url=/admin">
+  <link rel="canonical" href="https://pixelph.com/admin">
+  <title>Redirecting to PixelPH Staff Review</title>
+  <script>location.replace('/admin');</script>
 </head>
-<body class="v2-body admin-page">
-  <nav class="v2-nav">
-    <div class="v2-wrap nav-inner">
-      <a class="brand" href="/"><img src="/pixelph-mark.png" alt="PixelPH"><span>Pixel<span>PH</span></span></a>
-      <div class="nav-links">
-        <a href="/">Website</a>
-        <a href="/pages/whitelist.html">Application</a>
-        <a class="active" href="/admin.html">Staff Review</a>
-      </div>
-      <a class="ghost-btn admin-signout" href="/api/auth/logout">Sign out</a>
-    </div>
-  </nav>
-
-  <main class="page-shell admin-shell">
-    <section class="page-hero admin-hero">
-      <div class="v2-wrap">
-        <div class="section-kicker">PIXELPH STAFF • WHITELIST OPERATIONS</div>
-        <h1>Application <span class="accent">Review</span></h1>
-        <p>Review whitelist applications, inspect integrity signals, and make the final approval decision.</p>
-      </div>
-    </section>
-
-    <section class="page-section admin-section">
-      <div class="v2-wrap">
-        <div id="adminMessage" class="notice">Checking staff access…</div>
-
-        <div id="adminDashboard" class="hidden">
-          <div class="admin-stats" id="adminStats">
-            <div class="admin-stat"><span>Pending</span><strong id="statPending">0</strong></div>
-            <div class="admin-stat"><span>Approved</span><strong id="statApproved">0</strong></div>
-            <div class="admin-stat"><span>Rejected</span><strong id="statRejected">0</strong></div>
-            <div class="admin-stat"><span>Revoked</span><strong id="statRevoked">0</strong></div>
-            <div class="admin-stat"><span>Flagged</span><strong id="statFlagged">0</strong></div>
-          </div>
-
-          <div class="admin-toolbar">
-            <div class="admin-tabs" role="tablist" aria-label="Application status filter">
-              <button class="admin-tab active" data-filter="pending">Pending</button>
-              <button class="admin-tab" data-filter="all">All</button>
-              <button class="admin-tab" data-filter="approved">Approved</button>
-              <button class="admin-tab" data-filter="rejected">Rejected</button>
-              <button class="admin-tab" data-filter="revoked">Revoked</button>
-              <button class="admin-tab" data-filter="flagged">Flagged</button>
-            </div>
-            <label class="admin-search">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <input id="adminSearch" type="search" placeholder="Search Discord or character…" autocomplete="off">
-            </label>
-          </div>
-
-          <div id="adminList" class="table-wrap">
-            <table class="admin-table">
-              <thead><tr><th>Applicant</th><th>Character</th><th>Status</th><th>Integrity</th><th>Submitted</th><th></th></tr></thead>
-              <tbody id="adminRows"></tbody>
-            </table>
-          </div>
-          <div id="adminEmpty" class="empty-state hidden">No applications match this view.</div>
-
-          <div id="reviewBackdrop" class="review-backdrop hidden" aria-hidden="true"></div>
-          <aside id="reviewPanel" class="review-drawer hidden" aria-label="Application review panel"></aside>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="/admin.js?v=20260912-revoke-delete"></script>
-</body>
+<body><p>Redirecting to <a href="/admin">PixelPH Staff Review</a>…</p></body>
 </html>

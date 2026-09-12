@@ -1,5 +1,13 @@
 /
   Cache-Control: no-cache, no-store, must-revalidate
+/admin
+  Cache-Control: no-cache, no-store, must-revalidate
+/admin.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/pages/admin.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/admin-v51.js
+  Cache-Control: no-cache, no-store, must-revalidate
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
 /pixelph-v3-fixed.css
