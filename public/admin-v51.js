@@ -178,7 +178,7 @@ loadAdmin();
     const old=btn.textContent;
     btn.disabled=true; btn.textContent='Testing Discord…';
     try{
-      const r=await fetch('/api/admin/test-staff-notify',{method:'POST',cache:'no-store'});
+      const r=await fetch('/api/admin/applications',{method:'POST',cache:'no-store',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({action:'test_staff_notify'})});
       const j=await r.json();
       if(j.ok){
         msg.className='notice success';

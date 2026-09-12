@@ -1,0 +1,6 @@
+PixelPH V5.2.2
+- Staff notification diagnostic now POSTs to existing /api/admin/applications route.
+- Body: {"action":"test_staff_notify"}
+- Uses staff auth and Discord bot helper.
+- Staff channel: 1548176627446321172
+- Removed separate test-staff-notify route to avoid Pages routing issue.
