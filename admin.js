@@ -57,6 +57,7 @@ function updateStats(){
   $('statPending').textContent=apps.filter(a=>a.status==='pending').length;
   $('statApproved').textContent=apps.filter(a=>a.status==='approved').length;
   $('statRejected').textContent=apps.filter(a=>a.status==='rejected').length;
+  $('statRevoked').textContent=apps.filter(a=>a.status==='revoked').length;
   $('statFlagged').textContent=apps.filter(a=>Number(a.integrity_score)>=60).length;
 }
 
@@ -106,22 +107,26 @@ function openApp(id){
     ${answerBlock('Metagaming Scenario',a.scenario_meta)}
     ${answerBlock('Why PixelPH',a.why_pixelph)}
     ${a.reviewed_at?`<div class="previous-review"><b>Previous review</b><p>${statusBadge(a.status)} by ${esc(a.reviewed_by||'staff')} on ${fmtDate(a.reviewed_at)}</p>${a.review_reason?`<p>${esc(a.review_reason)}</p>`:''}</div>`:''}
-    <div class="quick-reasons"><span>Quick reject reason</span><div><button type="button" data-reason="Low-effort application. Please provide more detailed, original answers.">Low effort</button><button type="button" data-reason="Your answers contain signs of copied or heavily pasted content. Please reapply using your own words.">Copied / pasted</button><button type="button" data-reason="Your scenario answers do not demonstrate sufficient understanding of PixelPH roleplay rules.">RP knowledge</button><button type="button" data-reason="Your metagaming answer does not meet PixelPH whitelist standards.">Metagaming</button></div></div>
-    <div class="field review-note"><label for="reviewReason">Staff note / rejection reason</label><textarea id="reviewReason" placeholder="Required when rejecting. Optional staff note when approving.">${esc(a.review_reason||'')}</textarea></div>
+    <div class="quick-reasons"><span>Quick reason</span><div><button type="button" data-reason="Low-effort application. Please provide more detailed, original answers.">Low effort</button><button type="button" data-reason="Your answers contain signs of copied or heavily pasted content. Please reapply using your own words.">Copied / pasted</button><button type="button" data-reason="Your scenario answers do not demonstrate sufficient understanding of PixelPH roleplay rules.">RP knowledge</button><button type="button" data-reason="Whitelist access revoked by PixelPH staff.">Revoke access</button></div></div>
+    <div class="field review-note"><label for="reviewReason">Staff note / decision reason</label><textarea id="reviewReason" placeholder="Required for Reject or Revoke. Optional when approving.">${esc(a.review_reason||'')}</textarea></div>
     <div class="admin-actions review-actions">
-      <button class="primary-btn" data-decision="approved" data-id="${esc(a.id)}"><i class="fa-solid fa-check"></i> Approve</button>
-      <button class="danger-btn" data-decision="rejected" data-id="${esc(a.id)}"><i class="fa-solid fa-xmark"></i> Reject</button>
+      ${a.status==='pending'?`<button class="primary-btn" data-decision="approved" data-id="${esc(a.id)}"><i class="fa-solid fa-check"></i> Approve</button><button class="danger-btn" data-decision="rejected" data-id="${esc(a.id)}"><i class="fa-solid fa-xmark"></i> Reject</button>`:''}
+      ${a.status==='approved'?`<button class="danger-btn" data-decision="revoked" data-id="${esc(a.id)}"><i class="fa-solid fa-ban"></i> Revoke Whitelist</button>`:''}
+      ${a.status==='revoked'?`<button class="primary-btn" data-decision="approved" data-id="${esc(a.id)}"><i class="fa-solid fa-rotate-left"></i> Restore Whitelist</button>`:''}
+      <button class="ghost-btn" data-delete="${esc(a.id)}"><i class="fa-solid fa-trash"></i> Delete / Reset Application</button>
     </div>`;
   panel.classList.remove('hidden');backdrop.classList.remove('hidden');document.body.classList.add('review-open');
   panel.querySelector('.drawer-close').addEventListener('click',closePanel);backdrop.addEventListener('click',closePanel,{once:true});
   panel.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>decide(b.dataset.id,b.dataset.decision,b)));
+  panel.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteApplication(b.dataset.delete,b)));
   panel.querySelectorAll('[data-reason]').forEach(b=>b.addEventListener('click',()=>{const t=$('reviewReason');if(t)t.value=b.dataset.reason||''}));
 }
 function closePanel(){panel.classList.add('hidden');backdrop.classList.add('hidden');document.body.classList.remove('review-open')}
 
 async function decide(id,status,button){
   const reason=$('reviewReason')?.value||'';
-  if(status==='rejected'&&!reason.trim())return alert('Add a rejection reason before rejecting this application.');
+  if((status==='rejected'||status==='revoked')&&!reason.trim())return alert(`Add a ${status==='revoked'?'revocation':'rejection'} reason first.`);
+  if(status==='revoked'&&!confirm('Revoke this player’s PixelPH whitelist? This will remove the Whitelisted Discord role and block FiveM access.'))return;
   const label=button.innerHTML;button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
   try{
     const r=await fetch(`/api/admin/applications/${encodeURIComponent(id)}`,{method:'POST',headers:{'content-type':'application/json','accept':'application/json'},body:JSON.stringify({status,reason})});
@@ -141,6 +146,20 @@ async function decide(id,status,button){
     msg.textContent=details.replace(/\n/g,' | ');
     msg.classList.remove('hidden');
     alert(details);
+  }catch(e){alert(e.message)}finally{button.disabled=false;button.innerHTML=label}
+}
+
+async function deleteApplication(id,button){
+  const a=apps.find(x=>String(x.id)===String(id));
+  if(!a)return;
+  if(!confirm(`Delete/reset ${a.discord_username || a.character_name}'s application?\n\nThis removes the application record, removes the Whitelisted Discord role, and allows a fresh application.`))return;
+  const label=button.innerHTML;button.disabled=true;button.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Deleting…';
+  try{
+    const r=await fetch(`/api/admin/applications/${encodeURIComponent(id)}`,{method:'DELETE',headers:{accept:'application/json'}});
+    const j=await r.json();if(!r.ok)throw new Error(j.error||'Delete failed');
+    apps=apps.filter(x=>String(x.id)!==String(id));
+    closePanel();updateStats();renderRows();
+    alert('Application deleted/reset. The player can submit a fresh application.');
   }catch(e){alert(e.message)}finally{button.disabled=false;button.innerHTML=label}
 }
 
