@@ -73,20 +73,26 @@
       <p id="authCopy">Sign in with Discord before submitting so your application is tied to the same identity used by the FiveM whitelist.</p>
       <div id="authArea"><a href="/api/auth/login" class="primary-btn">Sign in with Discord</a></div>
 
-      <hr>
+      <div class="apply-brief">
+        <hr>
 
-      <h3>Before you apply</h3>
-      <ul>
-        <li>Read the rules and full rulebook.</li>
-        <li>Use your own words and examples.</li>
-        <li>Do not submit copied application answers.</li>
-        <li>One active application per Discord account.</li>
-      </ul>
-      <a href="rules.html" class="ghost-btn">Read the City Code</a>
+        <h3>Before you apply</h3>
+        <ul>
+          <li>Read the rules and full rulebook.</li>
+          <li>Use your own words and examples.</li>
+          <li>Do not submit copied application answers.</li>
+          <li>One active application per Discord account.</li>
+        </ul>
+        <a href="rules.html" class="ghost-btn">Read the City Code</a>
+      </div>
     </aside>
 
-    <div>
+    <div class="form-column">
       <div id="statusArea" class="status-box" style="margin-bottom:22px">Checking your application status&hellip;</div>
+
+      <!-- Populated by whitelist-state.js from the status class that
+           whitelist.js sets. Presentation only; no application logic. -->
+      <div id="applicationNext" class="next-panel" hidden></div>
 
       <form id="whitelistForm" class="form-card hidden">
         <div class="form-legend">
@@ -184,5 +190,6 @@
 <script src="../script.js?v=20260912-v6"></script>
 <script src="../media.js?v=20260912-v6"></script>
 <script src="../whitelist.js?v=20260912-v6"></script>
+<script src="../whitelist-state.js?v=20260912-v6"></script>
 </body>
 </html>
