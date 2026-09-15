@@ -8,7 +8,13 @@
   Cache-Control: no-cache, no-store, must-revalidate
 /admin-v51.js
   Cache-Control: no-cache, no-store, must-revalidate
+/gallery-admin.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/gallery-admin.js
+  Cache-Control: no-cache, no-store, must-revalidate
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
 /pixelph-v3-fixed.css
+  Cache-Control: public, max-age=31536000, immutable
+/gallery-media/*
   Cache-Control: public, max-age=31536000, immutable

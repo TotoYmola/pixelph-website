@@ -189,6 +189,21 @@ Steps 1–3 alone will carry the site.
 
 ---
 
+## City Gallery (separate system)
+
+Everything above is the fixed set of named `.ph-frame` slots baked into the
+page markup. The **City Gallery** (`/pages/gallery.html`, plus the "Inside
+the city" homepage preview) is a different, open-ended system: staff upload
+screenshots through the **Gallery Manager** at `/gallery-admin.html`
+(Discord staff login required), not by dropping files into `assets/media/`.
+There is no fixed filename or slot count — upload as many as you want, in
+any category, and mark the best ones **Featured** to surface them on the
+homepage. See `CLOUDFLARE_SETUP.md` for the one-time R2 bucket setup this
+needs. The capture notes above (HUD off, dark exposure, no other player's
+name in frame) still apply to Gallery screenshots too.
+
+---
+
 ## Checklist before you upload
 
 - Filename matches this guide exactly, including the `.webp` extension

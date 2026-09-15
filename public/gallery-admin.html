@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gallery Manager | PixelPH</title>
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <link rel="icon" href="/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/pixelph-v3-fixed.css?v=20260915-gallery-admin">
+</head>
+<body class="v2-body admin-page">
+  <nav class="v2-nav">
+    <div class="v2-wrap nav-inner">
+      <a class="brand" href="/"><img src="/pixelph-mark.png" alt="PixelPH"><span>Pixel<span>PH</span></span></a>
+      <div class="nav-links">
+        <a href="/">Website</a>
+        <a href="/pages/whitelist.html">Application</a>
+        <a href="/admin.html">Staff Review</a>
+        <a class="active" href="/gallery-admin.html">Gallery Manager</a>
+      </div>
+      <a class="ghost-btn admin-signout" href="/api/auth/logout">Sign out</a>
+    </div>
+  </nav>
+
+  <main class="page-shell admin-shell">
+    <section class="page-hero admin-hero">
+      <div class="v2-wrap">
+        <div class="section-kicker">PIXELPH STAFF &bull; CITY GALLERY</div>
+        <h1>Gallery <span class="accent">Manager</span></h1>
+        <p>Upload real PixelPH screenshots, curate what's featured on the homepage, and manage what's published in the public City Gallery.</p>
+      </div>
+    </section>
+
+    <section class="page-section admin-section">
+      <div class="v2-wrap">
+        <div id="galleryAdminMessage" class="notice">Checking staff access&hellip;</div>
+
+        <div id="galleryAdminDashboard" class="hidden">
+
+          <div class="gallery-admin-upload">
+            <h2>Upload screenshots</h2>
+            <p class="review-muted">Select one or more images. Each gets its own title below; category, description and featured/published status apply to the whole batch and can be edited per image afterward.</p>
+
+            <div class="field">
+              <label for="gaFiles">Image files (JPEG, PNG or WebP)</label>
+              <input id="gaFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+            </div>
+
+            <div id="gaFileList" class="gallery-admin-filelist"></div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="gaCategory">Category</label>
+                <input id="gaCategory" list="gaCategoryOptions" placeholder="e.g. city, police, ems, vehicles" value="city">
+                <datalist id="gaCategoryOptions"></datalist>
+              </div>
+              <div class="field">
+                <label for="gaDescription">Description (optional, applies to this batch)</label>
+                <input id="gaDescription" placeholder="Short caption shown under the image">
+              </div>
+            </div>
+
+            <div class="gallery-admin-toggles">
+              <label><input type="checkbox" id="gaFeatured"> Mark as Featured</label>
+              <label><input type="checkbox" id="gaPublished" checked> Publish immediately</label>
+            </div>
+
+            <button id="gaUploadBtn" class="primary-btn" type="button" disabled><i class="fas fa-upload"></i> Publish images</button>
+            <div id="gaUploadStatus" class="gallery-admin-upload-status"></div>
+          </div>
+
+          <div class="gallery-admin-listhead">
+            <h2>Gallery images</h2>
+            <label class="admin-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <select id="gaFilter"><option value="all">All categories</option></select>
+            </label>
+          </div>
+
+          <div id="gaGrid" class="gallery-admin-grid"></div>
+          <div id="gaEmpty" class="empty-state hidden">No gallery images yet. Upload your first screenshot above.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="gaEditBackdrop" class="review-backdrop hidden" aria-hidden="true"></div>
+  <aside id="gaEditPanel" class="review-drawer hidden" aria-label="Edit gallery image"></aside>
+
+  <script src="/gallery-admin.js?v=20260915-gallery-admin"></script>
+</body>
+</html>

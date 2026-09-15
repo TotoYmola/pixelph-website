@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -6,17 +6,17 @@
 <script>document.documentElement.className+=" js"</script>
 <!-- Scroll reveals are scoped to html.js, so if scripting fails or the
      bundle 404s the page renders fully visible instead of blank. -->
-<title>How to Join | PixelPH</title>
-<meta name="description" content="How to apply and join the whitelisted PixelPH FiveM server.">
+<title>City Gallery | PixelPH</title>
+<meta name="description" content="Browse real screenshots from inside PixelPH — the city, businesses, police and EMS, vehicles, housing, jobs, events, nightlife and community roleplay.">
 <meta name="theme-color" content="#05070a">
 <link rel="icon" href="../favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Literata:ital,opsz,wght@0,7..72,300..600;1,7..72,300..500&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet" href="../pixelph-v6.css?v=20260912-v6">
+<link rel="stylesheet" href="../pixelph-v6.css?v=20260915-gallery">
 </head>
-<body class="v2-body">
+<body class="v2-body gallery-page">
 <a class="skip-link" href="#page-main">Skip to content</a>
 <div id="pixelphScrollProgress" aria-hidden="true"></div>
 <header class="v2-nav">
@@ -33,9 +33,9 @@
       <a href="../pages/reputation.html">Reputation</a>
       <a href="../pages/membership.html">Membership</a>
       <a href="../pages/showroom.html">Showroom</a>
-      <a href="../pages/gallery.html">Gallery</a>
+      <a class="active" href="../pages/gallery.html">Gallery</a>
       <a data-discord-link href="#" target="_blank" rel="noopener">Discord</a>
-      <a href="../pages/whitelist.html" class="nav-cta nav-apply">Apply</a>
+      <a href="../pages/account.html" class="nav-cta">My PixelPH</a>
     </nav>
   </div>
   <div id="mobileMenu" class="mobile-nav hidden">
@@ -45,62 +45,66 @@
     <a href="../pages/reputation.html">Reputation</a>
     <a href="../pages/membership.html">Membership</a>
     <a href="../pages/showroom.html">Showroom</a>
-    <a href="../pages/gallery.html">Gallery</a>
-    <a href="../pages/whitelist.html">Apply for whitelist</a>
+    <a class="active" href="../pages/gallery.html">Gallery</a>
+    <a href="../pages/account.html">My PixelPH</a>
     <a data-discord-link href="#" target="_blank" rel="noopener">Discord</a>
   </div>
 </header>
 <main id="page-main" class="page-shell">
 
 <section class="page-hero">
-  <div class="page-hero-bg ph-frame tone-mint" data-media="assets/media/city/city-entry-01.webp">
+  <div class="page-hero-bg ph-frame tone-cold" data-media="assets/media/city/city-skyline-01.webp">
 <span class="plate-skyline" aria-hidden="true"></span>
-    <img src="../assets/media/city/city-entry-01.webp" alt="" loading="lazy" decoding="async">
+    <img src="../assets/media/city/city-skyline-01.webp" alt="" loading="lazy" decoding="async">
   </div>
   <div class="v2-wrap">
     <div class="rail">
-      <p class="lead-in">How to join</p>
-      <h1>PixelPH is whitelisted</h1>
-      <p>You cannot skip the application by using the server address directly. Entry is checked server-side against approved Discord IDs.</p>
+      <p class="lead-in">Inside PixelPH</p>
+      <h1>City Gallery</h1>
+      <p>Real screenshots taken inside PixelPH — the streets, the businesses, the departments, the cars people actually drive, and the residents who make the city worth logging into.</p>
     </div>
   </div>
 </section>
 
-<section class="page-section">
+<section class="page-section gallery-section">
   <div class="v2-wrap">
-    <div class="steps">
-      <div class="step">
-        <h3>Join Discord</h3>
-        <p>Join the PixelPH Discord so staff can identify your account and contact you about your application.</p>
-        <a data-discord-link href="#" target="_blank" rel="noopener" class="ghost-btn">Open Discord</a>
-      </div>
-      <div class="step">
-        <h3>Apply</h3>
-        <p>Answer the whitelist questions in your own words. Low-effort or copied submissions may be rejected.</p>
-        <a href="whitelist.html" class="primary-btn">Start application</a>
-      </div>
-      <div class="step">
-        <h3>Get approved</h3>
-        <p>Once approved, your Discord identity is allowed through the FiveM whitelist gate. Then connect through the website or FiveM.</p>
-        <a data-connect-link href="#" target="_blank" rel="noopener" class="ghost-btn">Connect</a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="band band-hair">
-  <div class="v2-wrap sec-head">
-    <div class="rail">
-      <h2 class="t-section">Read the City Code first.</h2>
-      <p class="prose">It is the single best thing you can do for your application.</p>
-      <div class="btn-row" style="margin-top:26px">
-        <a href="rulebook.html" class="primary-btn">Open the City Code</a>
+    <div class="gallery-toolbar">
+      <div id="galleryCategories" class="gallery-cats" role="tablist" aria-label="Gallery categories">
+        <button class="gallery-cat active" data-cat="all" type="button">All</button>
       </div>
     </div>
+
+    <div id="galleryLoading" class="gallery-loading">
+      <div class="gallery-skel"></div><div class="gallery-skel"></div><div class="gallery-skel"></div>
+      <div class="gallery-skel"></div><div class="gallery-skel"></div><div class="gallery-skel"></div>
+    </div>
+
+    <div id="galleryEmpty" class="empty-state hidden">
+      <i class="fas fa-camera-retro" aria-hidden="true"></i>
+      <p>No screenshots in this category yet. Check back soon — the gallery grows as staff add new city captures.</p>
+    </div>
+
+    <div id="galleryGrid" class="gallery-grid hidden"></div>
   </div>
 </section>
 
 </main>
+
+<div id="galleryLightbox" class="gallery-lightbox hidden" role="dialog" aria-modal="true" aria-label="Image preview">
+  <button class="gallery-lb-close" type="button" aria-label="Close preview"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+  <button class="gallery-lb-nav gallery-lb-prev" type="button" aria-label="Previous image"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+  <button class="gallery-lb-nav gallery-lb-next" type="button" aria-label="Next image"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+  <div class="gallery-lb-stage">
+    <img id="galleryLbImage" src="" alt="">
+  </div>
+  <div class="gallery-lb-info">
+    <span id="galleryLbCategory" class="gallery-lb-cat"></span>
+    <h3 id="galleryLbTitle"></h3>
+    <p id="galleryLbDesc"></p>
+  </div>
+</div>
+
 <footer class="v2-footer">
   <div class="v2-wrap">
     <div class="footer-top">
@@ -137,5 +141,6 @@
 </footer>
 <script src="../script.js?v=20260912-v6"></script>
 <script src="../media.js?v=20260912-v6"></script>
+<script src="../gallery.js?v=20260915-gallery"></script>
 </body>
 </html>
