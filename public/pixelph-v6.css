@@ -870,6 +870,7 @@ body.nav-open{overflow:hidden}
     clip-path:none!important;
     transition:none!important;
   }
+  .status-pill:not(.offline) .live-dot{animation:none}
   #pixelphScrollProgress{display:none}
   .mobile-nav:not(.hidden){animation:none}
   *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important}
@@ -1427,13 +1428,25 @@ body.nav-open{overflow:hidden}
    19. CITY STATUS BAND — dispatch readout, not a rounded card
    ========================================================================== */
 .status-band{
+  position:relative;
+  overflow:hidden;
   border-bottom:1px solid var(--line);
+  padding:clamp(64px,10vh,112px) 0;
+}
+.status-band>.ph-frame{position:absolute;inset:0;z-index:0}
+.status-band::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
   background:
-    radial-gradient(70% 100% at 88% 0%,rgba(0,215,194,.05),transparent 60%),
-    var(--ink);
-  padding:clamp(56px,8vh,96px) 0;
+    radial-gradient(60% 90% at 88% 0%,rgba(0,215,194,.14),transparent 62%),
+    linear-gradient(100deg,transparent 0%,transparent 44%,rgba(4,6,10,.58) 68%,rgba(4,6,10,.76) 100%);
 }
 .status-grid{
+  position:relative;
+  z-index:2;
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,auto);
   gap:clamp(30px,5vw,70px);
@@ -1442,17 +1455,23 @@ body.nav-open{overflow:hidden}
 .status-readout{
   display:flex;
   flex-wrap:wrap;
-  border-top:1px solid var(--line-2);
-  border-bottom:1px solid var(--line-2);
-  margin-top:30px;
+  gap:12px;
+  margin-top:28px;
 }
-.status-readout>div{
-  flex:1 1 140px;
-  padding:22px 24px 22px 0;
-  border-right:1px solid var(--line-2);
+/* .live-stats sits between .status-readout and its two stat <div>s only to
+   group them in the markup — display:contents removes it from layout, but
+   a bare ">div" selector still only matches *its own* DOM children, so the
+   card styling below is written to match both nesting levels explicitly. */
+.status-readout>div,
+.live-stats>div{
+  flex:1 1 150px;
+  padding:20px 22px;
+  border-radius:var(--radius-lg);
+  border:1px solid var(--line-2);
+  background:rgba(5,9,12,.6);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
 }
-.status-readout>div:last-child{border-right:0}
-.status-readout>div:not(:first-child){padding-left:24px}
 .live-stats{display:contents}
 .live-stats div{display:block}
 .live-stats strong,.status-readout strong{
@@ -1482,16 +1501,23 @@ body.nav-open{overflow:hidden}
   padding:9px 15px;
   border:1px solid rgba(0,215,194,.3);
   border-radius:99px;
-  background:rgba(0,215,194,.05);
+  background:rgba(0,215,194,.08);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
   color:#9deee2;
   font-size:.64rem;
   font-weight:750;
   letter-spacing:.16em;
   text-transform:uppercase;
 }
+.status-pill:not(.offline) .live-dot{animation:statusPillPulse 2.2s ease-in-out infinite}
+@keyframes statusPillPulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(0,215,194,.12),0 0 14px rgba(0,215,194,.8)}
+  50%{box-shadow:0 0 0 5px rgba(0,215,194,.05),0 0 20px rgba(0,215,194,1)}
+}
 .status-pill.offline{
   border-color:rgba(255,107,120,.3);
-  background:rgba(255,107,120,.05);
+  background:rgba(255,107,120,.08);
   color:#ff9ba4;
 }
 
@@ -1594,14 +1620,15 @@ body.nav-open{overflow:hidden}
   .v2-hero{min-height:auto;padding:112px 0 0}
   .v2-hero h1{max-width:none;letter-spacing:-.045em}
   .scroll-mark{display:none}
-  .status-readout>div,.quote-stats>div,.recruit-steps>div{
+  .quote-stats>div,.recruit-steps>div{
     flex:1 1 100%;
     border-right:0;
     border-bottom:1px solid var(--line-2);
     padding-left:0!important;
     padding-right:0;
   }
-  .status-readout>div:last-child,.quote-stats>div:last-child,.recruit-steps>div:last-child{border-bottom:0}
+  .quote-stats>div:last-child,.recruit-steps>div:last-child{border-bottom:0}
+  .status-readout>div,.live-stats>div{flex:1 1 100%}
   .film-strip .ph-frame{aspect-ratio:4/5;min-height:0}
   .film-caption{position:static;padding:26px var(--gutter) 34px;background:var(--ink)}
   .quote-plate{min-height:0}
