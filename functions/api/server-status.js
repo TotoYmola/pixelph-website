@@ -33,6 +33,24 @@ function offlinePayload() {
   return { online: false, players: 0, maxPlayers: DEFAULT_MAX_PLAYERS };
 }
 
+/* Debug-only control test: does Cloudflare's network reach this hostname
+   at all on a normal, unrestricted port? If this succeeds fast while the
+   :30120 request above times out, the failure is specific to that port —
+   not general DNS/routing/reachability to the host. */
+async function controlProbe(host) {
+  const started = Date.now();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 3000);
+  try {
+    const r = await fetch(`https://${host}/`, { signal: controller.signal, method: 'HEAD' });
+    return { target: `https://${host}/`, elapsedMs: Date.now() - started, outcome: 'reached', httpStatus: r.status };
+  } catch (e) {
+    return { target: `https://${host}/`, elapsedMs: Date.now() - started, outcome: e?.name === 'AbortError' ? 'timeout' : 'fetch-exception', errorName: e?.name || null, errorMessage: e?.message || String(e) };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function queryFxServer(host, port) {
   const url = `http://${host}:${port}/dynamic.json`;
   const controller = new AbortController();
@@ -120,7 +138,8 @@ export async function onRequestGet({ request, env }) {
     }
 
     if (debug) {
-      return json({ ...payload, _diag: { ...diag, envHostSet: Boolean(env.FIVEM_SERVER_HOST), envPortSet: Boolean(env.FIVEM_SERVER_PORT), hostUsed: host, portUsed: port } }, 200, { 'cache-control': 'no-store' });
+      const control = await controlProbe(host);
+      return json({ ...payload, _diag: { ...diag, envHostSet: Boolean(env.FIVEM_SERVER_HOST), envPortSet: Boolean(env.FIVEM_SERVER_PORT), hostUsed: host, portUsed: port, controlProbe: control } }, 200, { 'cache-control': 'no-store' });
     }
 
     const response = json(payload, 200, { 'cache-control': `public, max-age=${CACHE_SECONDS}` });
