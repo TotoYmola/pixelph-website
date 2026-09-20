@@ -27,6 +27,7 @@ NAV = [
     ("reputation", "Reputation", "pages/reputation.html"),
     ("membership", "Membership", "pages/membership.html"),
     ("showroom", "Showroom", "pages/showroom.html"),
+    ("gallery", "Gallery", "pages/gallery.html"),
 ]
 
 
@@ -114,6 +115,8 @@ def footer(prefix):
         <a href="{prefix}pages/reputation.html">Reputation</a>
         <a href="{prefix}pages/rules.html">City Code</a>
         <a href="{prefix}pages/rulebook.html">Full rulebook</a>
+        <a href="{prefix}pages/commandbook.html">Command Book</a>
+        <a href="{prefix}pages/keybinds.html">Keybinds</a>
       </div>
       <div class="footer-col">
         <h3>Join</h3>

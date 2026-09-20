@@ -84,6 +84,11 @@ def main():
         <nav class="rules-category-nav">
 {toc_html}
         </nav>
+        <div class="rules-sidebar-more">
+          <p>Also in the City Code</p>
+          <a href="commandbook.html">Command Book</a>
+          <a href="keybinds.html">Keybinds</a>
+        </div>
       </aside>
 
       <div class="rules-content">

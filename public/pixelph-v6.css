@@ -3633,3 +3633,90 @@ body.gallery-lb-open{overflow:hidden}
   .gallery-lb-close{top:8px;right:8px}
   .gallery-preview-grid{grid-template-columns:1fr 1fr;grid-auto-rows:130px}
 }
+
+/* ==========================================================================
+   35. COMMAND BOOK & KEYBINDS
+   Built on the same reading-page shell as the City Code (.rules-layout,
+   .rules-sidebar, .rules-search-*, .rules-category, .rule-search-item) so
+   both pages get search, the sticky contents rail and scroll-spy for free
+   from rulebook.js. Only the row styling for a command entry is new —
+   Keybinds reuses .keybind-grid/.keybind-row as-is.
+   ========================================================================== */
+.cmd-grid{margin:1.2em 0 0;border-top:1px solid var(--line-2)}
+.cmd-row{
+  display:grid;
+  grid-template-columns:minmax(0,220px) minmax(0,1fr);
+  align-items:start;
+  gap:6px 28px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.cmd-name{
+  display:inline-flex;
+  width:fit-content;
+  max-width:100%;
+  padding:6px 10px;
+  border:1px solid var(--slate);
+  border-bottom-width:2px;
+  border-radius:4px;
+  background:linear-gradient(180deg,#101a1d,#080d10);
+  color:#d6f7ee;
+  font-family:var(--mono);
+  font-size:.74rem;
+  font-weight:600;
+  letter-spacing:.01em;
+  line-height:1.5;
+  white-space:normal;
+  word-break:break-word;
+}
+.cmd-desc{
+  margin:0;
+  padding-top:2px;
+  font-family:var(--sans);
+  font-size:.87rem;
+  line-height:1.62;
+  color:#b6c4c0;
+}
+
+/* Command Book / Keybinds pages don't need the select-none treatment the
+   rules text gets — players copy a command to paste it in-game. */
+.rules-page.cmdbook-page .rules-content,
+.rules-page.keybinds-page .rules-content{-webkit-user-select:text;user-select:text;caret-color:auto}
+
+/* Small "related pages" links under the category contents rail */
+.rules-sidebar-more{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.rules-sidebar-more p{
+  font-family:var(--sans);
+  font-size:.6rem;
+  font-weight:750;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+  margin:0 0 10px;
+}
+.rules-sidebar-more a{
+  display:block;
+  padding:8px 12px 8px 13px;
+  border-left:1px solid var(--line);
+  font-family:var(--sans);
+  font-size:.83rem;
+  font-weight:600;
+  color:#93a2a3;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.rules-sidebar-more a:hover{
+  color:#dffdf5;
+  border-left-color:var(--mint);
+  background:linear-gradient(90deg,rgba(0,215,194,.05),transparent);
+}
+
+@media (max-width:1000px){
+  /* The sidebar becomes a sticky horizontal strip on mobile (see section 25);
+     these extra links would stay pinned on screen at all times if kept, so
+     they're dropped here — discoverable instead via the footer and the
+     City Code overview page. */
+  .rules-sidebar-more{display:none}
+}
+@media (max-width:560px){
+  .cmd-row{grid-template-columns:minmax(0,1fr);gap:8px}
+}

@@ -186,6 +186,39 @@ RULES = f"""
 </section>
 
 <section class="band band-hair">
+  <div class="v2-wrap">
+    <div class="sec-head">
+      <div class="rail">
+        <h2 class="t-section">Also part of the City Code</h2>
+      </div>
+      <p>Day-to-day references for players already in the city: every chat command, and the default keybinds.</p>
+    </div>
+    <ul class="code-index">
+      <li>
+        <a href="commandbook.html">
+          <span class="ci-n">CB</span>
+          <div>
+            <h3>Command Book</h3>
+            <p>Every player chat command on PixelPH, grouped by category, with search.</p>
+          </div>
+          <span class="ci-go" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
+        </a>
+      </li>
+      <li>
+        <a href="keybinds.html">
+          <span class="ci-n">KB</span>
+          <div>
+            <h3>Keybinds</h3>
+            <p>Default keyboard controls for chat, vehicles, jobs, and interaction.</p>
+          </div>
+          <span class="ci-go" aria-hidden="true"><i class="fas fa-arrow-right"></i></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="band band-hair">
   <div class="v2-wrap sec-head">
     <div class="rail">
       <h2 class="t-section">Read it properly before you apply</h2>
@@ -194,6 +227,349 @@ RULES = f"""
         <a class="primary-btn" href="rulebook.html">Open the full City Code</a>
         <a class="ghost-btn" href="whitelist.html">Apply for whitelist</a>
       </div>
+    </div>
+  </div>
+</section>
+
+</main>
+"""
+
+# ==========================================================================
+# COMMAND BOOK & KEYBINDS
+#
+# Every command/key below was read directly out of the live server's own
+# resource code or its (unencrypted) config files during a September 2026
+# audit of every `ensure`d resource in server.cfg. Nothing here is invented:
+# where a resource's registration call itself was commercial escrow-encrypted
+# and unreadable, the entry was only kept if the resource's own plaintext
+# config file unambiguously declares that exact command/key string; anything
+# that relied only on a vendor's separate marketing/doc file (which was found
+# to actively contradict the shipped config in places) was left out. Staff,
+# admin, debug and mapping/dev-tool commands are excluded throughout — this
+# is a player reference, not developer documentation. No resource or script
+# name appears anywhere below.
+# ==========================================================================
+COMMANDBOOK_CATEGORIES = [
+    ("general", "General", "Chat, voice, and everyday utility commands available to every player.", [
+        ("/pm [id] [message]", "Send a private message to another player."),
+        ("/clearchat", "Clear your chat window."),
+        ("/ox_lib", "Open your settings menu for notification sound, position, and language."),
+        ("/ui_target", "Open the interaction menu's theme picker."),
+        ("/setvoiceintent [speech|music]", "Set your mic's audio processing mode (noise suppression on or off)."),
+        ("/vol [1-100]", "Set your radio and phone playback volume."),
+        ("/hudsettings", "Open the HUD settings menu."),
+        ("/record", "Start a Rockstar Editor recording."),
+        ("/clip", "Mark a clip point while recording."),
+        ("/saveclip", "Save your Rockstar Editor clip."),
+        ("/delclip", "Discard your Rockstar Editor clip."),
+        ("/editor", "Open the Rockstar Editor."),
+    ]),
+    ("character", "Character", "Check your own character, job, and standing.", [
+        ("/id", "Check your own server player ID."),
+        ("/job", "Check your current job, grade, and duty status."),
+        ("/gang", "Check your current gang and grade."),
+        ("/jailtime", "Check your own remaining jail time."),
+    ]),
+    ("roleplay", "Roleplay", "Tools for playing your character &mdash; actions, emotes, and expression.", [
+        ("/ooc [message]", "Send an out-of-character message to nearby players."),
+        ("/me [message]", "Show a roleplay action message above your character."),
+        ("/steal", "Open a nearby player's inventory to pickpocket them."),
+        ("/em, /emotemenu", "Open the emote menu."),
+        ("/e, /emote, /eplay [name]", "Play an emote, or open the emote list if no name is given."),
+        ("/w, /walk [name]", "Set your walking style."),
+        ("/f, /face [name]", "Set your facial expression."),
+    ]),
+    ("vehicle", "Vehicle", "Commands for driving, trunks, and vehicle ownership.", [
+        ("/manualmode", "Toggle manual or automatic transmission."),
+        ("/hotwire", "Start hotwiring the vehicle you're in."),
+        ("/getintrunk", "Climb into a nearby vehicle's trunk."),
+        ("/putintrunk", "Put a nearby target player into a vehicle trunk."),
+        ("/togglevehradio", "Toggle the in-vehicle radio on or off."),
+        ("/transfervehicle [id] [amount]", "Transfer a purchased vehicle's ownership to another player, optionally for a price."),
+    ]),
+    ("phone", "Phone", "The one chat command for your in-game phone &mdash; see Keybinds for in-app controls.", [
+        ("/phone", "Open your phone."),
+    ]),
+    ("property", "Property", "Managing property you own or rent.", [
+        ("/togglepropertyblips", "Toggle visibility of property blips on the map."),
+    ]),
+    ("business", "Business", "Commands tied to running a business.", [
+        ("/locksmith", "Open the Locksmith business actions menu. Locksmith business members only."),
+    ]),
+    ("mechanic", "Mechanic", "Commands for the tow/mechanic job.", [
+        ("/tow", "Start a tow job delivery. Tow or Mechanic job only."),
+        ("/npc", "Toggle a tow job NPC helper. Tow job only."),
+    ]),
+    ("jobs", "Jobs", "Commands tied to a specific job.", [
+        ("/newscam", "Toggle your news camera. Reporter job only."),
+        ("/newsmic", "Toggle your news microphone. Reporter job only."),
+        ("/newsbmic", "Toggle your news boom microphone. Reporter job only."),
+    ]),
+    ("police", "Police", "Commands for on-duty police and sheriff officers.", [
+        ("/callsign [callsign]", "Set your police unit callsign."),
+        ("/mdt", "Open the Mobile Data Terminal."),
+        ("/panic", "Panic button &mdash; send a high-priority alert with your location to police dispatch."),
+        ("/issueTicket", "Open the traffic ticket menu to fine or cite a nearby player."),
+        ("/trafficmenu", "Open the traffic zone and speed-limit management menu."),
+        ("/radarconfig", "Reposition the in-vehicle speed radar display."),
+        ("/radiolist", "Reposition the radio channel member list display."),
+        ("/divingsuithud", "Reposition the diving suit's oxygen HUD."),
+        ("/jail", "Send a player to jail."),
+        ("/unjail", "Release a player from jail."),
+        ("/prisoners", "View the list of jailed players."),
+    ]),
+    ("ems", "EMS", "Commands for on-duty EMS and medical staff.", [
+        ("/911 [message]", "Send an emergency alert to EMS with your location."),
+        ("/emsDispatch", "Open the EMS dispatch/alerts menu."),
+    ]),
+    ("other", "Other", "Everything that didn't fit a category above.", [
+        ("/createrace [amount]", "Create a street race with a cash stake."),
+        ("/startrace", "Start the street race you created."),
+        ("/stoprace", "Stop the street race you created."),
+        ("/quitrace", "Quit a street race you joined."),
+    ]),
+]
+
+KEYBINDS_CATEGORIES = [
+    ("general", "General", "Defaults that apply everywhere, on foot or off duty.", [
+        ("T", "Open the chat input box."),
+        ("X", "Cancel your active progress bar."),
+        ("K", "Crouch. Not while in a vehicle."),
+        ("Backspace", "Close the binoculars view."),
+        ("HOME", "Open or close the scoreboard."),
+        ("E", "Tackle a nearby sprinting player."),
+    ]),
+    ("roleplay", "Roleplay", "Emotes and character expression.", [
+        ("F5", "Open the emote menu."),
+        ("X", "Cancel your current emote."),
+        ("G", "Play a particle effect while emoting. Hold."),
+        ("H", "Raise your hands. Hold."),
+        ("Left Ctrl", "Cycle stance."),
+        ("B", "Point."),
+        ("U", "Ragdoll."),
+    ]),
+    ("vehicle", "Vehicle", "Driving, seating, and vehicle controls.", [
+        ("B", "Buckle or unbuckle your seatbelt."),
+        ("Y", "Toggle cruise control."),
+        ("Caps Lock", "Toggle cruise control."),
+        ("O", "Shuffle to the next vehicle seat."),
+        ("E + Left Shift", "Push a broken-down vehicle. Hold both."),
+        ("G", "Turn the vehicle engine on or off."),
+        ("L", "Lock or unlock your vehicle."),
+        ("F9", "Toggle the in-vehicle radio on or off."),
+    ]),
+    ("phone", "Phone", "Controls used while your phone is open.", [
+        ("M", "Open your phone."),
+        ("/ (Slash)", "Toggle flip/fold on your phone."),
+        ("Left Alt", "Toggle cursor focus while using your phone."),
+        ("Enter", "Answer an incoming call."),
+        ("Enter", "Take a photo. Camera app."),
+        ("Backspace", "Decline or cancel a call."),
+        ("Backspace", "Close the camera app."),
+        ("Arrow Up", "Rotate the camera. Camera app."),
+        ("Space", "Unlock your phone."),
+    ]),
+    ("property", "Property", "Getting around and managing property.", [
+        ("F5", "Open the property menu."),
+        ("E", "Interact with a nearby elevator."),
+    ]),
+    ("police", "Police", "On-duty police and sheriff controls.", [
+        ("L", "Toggle the vehicle siren HUD. Emergency vehicles only."),
+        ("J", "Toggle emergency lights."),
+        (". (Period)", "Cycle siren tone or arm the siren."),
+        ("` (OEM_3)", "Mute or unmute the siren audio."),
+        ("E", "Manual horn / hi-lo burst. Police vehicle."),
+        ("F7", "Toggle the in-vehicle speed radar."),
+        ("[ (OEM_4)", "Lock the radar's front antenna on a target."),
+        ("] (OEM_6)", "Lock the radar's rear antenna on a target."),
+        ("\\ (OEM_5)", "Cycle the radar's direction/mode filter."),
+        ("G", "Rappel from a helicopter. Requires a rappel kit."),
+        ("F6", "Open the police interaction menu (cuff, search, drag, escort)."),
+        ("N", "Toggle night vision. While worn."),
+        ("T", "Toggle thermal vision. While worn."),
+        ("F4", "Open or close the helicopter camera. Gunner seat only."),
+        ("N", "Cycle the helicopter camera's vision mode. Gunner seat only."),
+        ("L", "Toggle the helicopter spotlight. Gunner seat only."),
+        ("E", "Lock the helicopter camera onto a target. Gunner seat only."),
+    ]),
+    ("ems", "EMS", "On-duty EMS and medical controls.", [
+        ("DELETE", "Open the medic dispatch/reports board."),
+        ("F5", "Open the EMS dispatch/alerts menu."),
+    ]),
+]
+
+
+def _cmd_rows(entries):
+    return "\n".join(
+        f'<div class="cmd-row rule-search-item"><code class="cmd-name">{cmd}</code><p class="cmd-desc">{desc}</p></div>'
+        for cmd, desc in entries
+    )
+
+
+def _cmd_categories(cats):
+    return "\n".join(
+        f'''<section class="rules-category" data-rule-category="{cid}" id="{cid}"><h2>{label}</h2><p class="rules-category-desc">{desc}</p><div class="cmd-grid">
+{_cmd_rows(entries)}
+</div></section>'''
+        for cid, label, desc, entries in cats
+    )
+
+
+def _key_rows(entries):
+    return "\n".join(
+        f'<div class="keybind-row rule-search-item"><kbd>{key}</kbd><span>{desc}</span></div>'
+        for key, desc in entries
+    )
+
+
+def _key_categories(cats):
+    return "\n".join(
+        f'''<section class="rules-category" data-rule-category="{cid}" id="{cid}"><h2>{label}</h2><p class="rules-category-desc">{desc}</p><div class="keybind-grid">
+{_key_rows(entries)}
+</div></section>'''
+        for cid, label, desc, entries in cats
+    )
+
+
+def _toc(cats):
+    return "\n".join(f'        <a href="#{cid}">{label}</a>' for cid, label, _desc, _entries in cats)
+
+
+COMMANDBOOK = f"""
+<main id="page-main" class="page-shell">
+
+<section class="page-hero">
+  <div class="page-hero-bg ph-frame tone-cold" data-media="assets/media/city/city-courthouse-02.webp">
+<span class="plate-skyline" aria-hidden="true"></span>
+    <img src="../assets/media/city/city-courthouse-02.webp" alt="" loading="lazy" decoding="async">
+  </div>
+  <div class="v2-wrap">
+    <div class="rail">
+      <p class="lead-in">Part of the City Code</p>
+      <h1>Command <span class="accent">Book</span></h1>
+      <p>Every chat command live on PixelPH right now, grouped by category. Search below, or browse by section.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page-section">
+  <div class="v2-wrap faq full-rulebook">
+    <div class="rules-layout">
+
+      <aside class="rules-sidebar" aria-label="Command categories">
+        <nav class="rules-category-nav">
+{_toc(COMMANDBOOK_CATEGORIES)}
+        </nav>
+        <div class="rules-sidebar-more">
+          <p>Also in the City Code</p>
+          <a href="rulebook.html">Full City Code</a>
+          <a href="keybinds.html">Keybinds</a>
+        </div>
+      </aside>
+
+      <div class="rules-content">
+        <div class="rules-search-wrap">
+          <div class="rules-search-field">
+            <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+            <input aria-label="Search commands" autocomplete="off" class="rules-search" id="ruleSearch" placeholder="Search a command &mdash; /me, /mdt, /911&hellip;" type="search">
+            <button class="rules-search-clear" type="button" aria-label="Clear search"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+          </div>
+          <div class="rules-search-count" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="rules-reading-guide">
+          <span>Browse by category.</span>
+          <span>Search any command or keyword to filter the list.</span>
+          <span>Job-restricted commands are grouped under that job.</span>
+        </div>
+
+        <div class="rules-no-results">
+          <strong>No matching commands.</strong>
+          Try a shorter search, or clear it to browse the full list. If you think a command is missing, ask in Discord.
+        </div>
+
+{_cmd_categories(COMMANDBOOK_CATEGORIES)}
+
+        <div class="notice">
+          <i class="fas fa-circle-info" aria-hidden="true"></i>
+          <div>
+            <strong>Job-restricted commands</strong>
+            <p>Commands under Police, EMS, Mechanic, Business, and Jobs only work while you hold that job (and, for some, while on duty). They won't do anything otherwise.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+"""
+
+KEYBINDS = f"""
+<main id="page-main" class="page-shell">
+
+<section class="page-hero">
+  <div class="page-hero-bg ph-frame tone-cold" data-media="assets/media/city/city-courthouse-02.webp">
+<span class="plate-skyline" aria-hidden="true"></span>
+    <img src="../assets/media/city/city-courthouse-02.webp" alt="" loading="lazy" decoding="async">
+  </div>
+  <div class="v2-wrap">
+    <div class="rail">
+      <p class="lead-in">Part of the City Code</p>
+      <h1>Key<span class="accent">binds</span></h1>
+      <p>Default keyboard controls on PixelPH, grouped by category. All of these can be rebound from FiveM's own Settings &rarr; Key Bindings menu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page-section">
+  <div class="v2-wrap faq full-rulebook">
+    <div class="rules-layout">
+
+      <aside class="rules-sidebar" aria-label="Keybind categories">
+        <nav class="rules-category-nav">
+{_toc(KEYBINDS_CATEGORIES)}
+        </nav>
+        <div class="rules-sidebar-more">
+          <p>Also in the City Code</p>
+          <a href="rulebook.html">Full City Code</a>
+          <a href="commandbook.html">Command Book</a>
+        </div>
+      </aside>
+
+      <div class="rules-content">
+        <div class="rules-search-wrap">
+          <div class="rules-search-field">
+            <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+            <input aria-label="Search keybinds" autocomplete="off" class="rules-search" id="ruleSearch" placeholder="Search a key or action &mdash; seatbelt, radar, phone&hellip;" type="search">
+            <button class="rules-search-clear" type="button" aria-label="Clear search"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+          </div>
+          <div class="rules-search-count" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="rules-reading-guide">
+          <span>Browse by category.</span>
+          <span>Search any key or action to filter the list.</span>
+          <span>Some keys do different things in different contexts.</span>
+        </div>
+
+        <div class="rules-no-results">
+          <strong>No matching keybinds.</strong>
+          Try a shorter search, or clear it to browse the full list. If you think a keybind is missing, ask in Discord.
+        </div>
+
+{_key_categories(KEYBINDS_CATEGORIES)}
+
+        <div class="notice">
+          <i class="fas fa-circle-info" aria-hidden="true"></i>
+          <div>
+            <strong>Same key, different job</strong>
+            <p>A few keys are reused on purpose &mdash; for example E and L do different things depending on whether you're on foot, driving, or in a police vehicle or helicopter. Job-restricted keybinds only work while you hold that job.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -897,6 +1273,26 @@ def build(page):
         active="rules",
         body_class="v2-body rules-page",
         body=RULES,
+    ))
+
+    out.append(page(
+        path="pages/commandbook.html",
+        title="Command Book | PixelPH",
+        description="Every player chat command on PixelPH, organized by category, with search.",
+        active="rules",
+        body_class="v2-body rules-page cmdbook-page",
+        body=COMMANDBOOK,
+        scripts=["rulebook.js?v=20260912-v6"],
+    ))
+
+    out.append(page(
+        path="pages/keybinds.html",
+        title="Keybinds | PixelPH",
+        description="Default PixelPH keyboard controls, organized by category, with search.",
+        active="rules",
+        body_class="v2-body rules-page keybinds-page",
+        body=KEYBINDS,
+        scripts=["rulebook.js?v=20260912-v6"],
     ))
 
     out.append(page(
